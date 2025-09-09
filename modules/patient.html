@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Management | HMS</title>
+  <link href="../style.css" rel="stylesheet">
+</head>
+
+<body>
+  <nav class="hms-nav">
+    <a href="../dashboard.html">Dashboard</a>
+    <a href="patient.html" class="active">Patient</a>
+    <a href="doctor.html">Doctor & Staff</a>
+    <a href="emr.html">EMR/EHR</a>
+    <a href="billing.html">Billing</a>
+    <a href="pharmacy.html">Pharmacy</a>
+    <a href="lab.html">Laboratory</a>
+    <a href="inventory.html">Inventory</a>
+    <a href="room.html">Room/Bed</a>
+    <a href="reports.html">Reports</a>
+    <a href="security.html">Security</a>
+  </nav>
+
+  <header class="hms-header">
+    <div class="hms-hero">
+      <svg class="hms-hero-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+        <rect x="8" y="8" width="48" height="48" rx="12" fill="var(--primary)" />
+      </svg>
+      <div>
+        <h1>Patient Management</h1>
+        <p class="subtitle">Register patients, manage visits, appointments and records.</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="hms-main">
+    <section class="hms-section">
+      <div class="hms-card">
+        <div class="hms-card-content">
+          <h2>Core Features</h2>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;">
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Registration</h3>
+              <p>Support for OPD, IPD and Emergency workflows with quick admit options.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Demographics</h3>
+              <p>Capture contact, IDs, family history and insurance details.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Appointments & Reminders</h3>
+              <p>Book visits and send SMS/Email reminders to patients and staff.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Queue Management</h3>
+              <p>Real-time queues with visit timelines and status updates.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Case Sheets</h3>
+              <p>Maintain past treatments, notes and attachments per visit.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Referral & MRN</h3>
+              <p>Track referrals and generate unique MRNs for every patient.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Consent Uploads</h3>
+              <p>Store signed consent forms and attachments securely.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 420px;gap:1.2rem;margin-top:1.2rem;align-items:start;">
+        <div>
+          <div class="hms-card">
+            <div class="hms-card-content">
+              <h3>Patient Registration (demo)</h3>
+              <form id="regForm">
+                <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+                  <input name="firstName" placeholder="First name" required
+                    style="flex:1;min-width:140px;padding:0.5rem;" />
+                  <input name="lastName" placeholder="Last name" style="flex:1;min-width:140px;padding:0.5rem;" />
+                </div>
+                <div style="margin-top:0.6rem;display:flex;gap:0.6rem;">
+                  <input name="phone" placeholder="Phone" style="flex:1;padding:0.5rem;min-width:140px;" />
+                  <input name="dob" type="date" style="padding:0.5rem;" />
+                </div>
+                <div style="margin-top:0.6rem;">
+                  <select name="visitType" style="padding:0.5rem;min-width:160px;">
+                    <option>OPD</option>
+                    <option>IPD</option>
+                    <option>Emergency</option>
+                  </select>
+                  <input id="mrn" readonly placeholder="MRN will be generated"
+                    style="margin-left:0.6rem;padding:0.5rem;min-width:220px;" />
+                </div>
+                <div style="margin-top:0.8rem;display:flex;gap:0.6rem;">
+                  <button type="submit" class="btn">Register</button>
+                  <button type="button" id="genMrn" class="btn outline">Generate MRN</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem;">
+            <div class="hms-card-content">
+              <h3>Appointment Booking (demo)</h3>
+              <form id="apptForm">
+                <div style="display:flex;gap:0.6rem;">
+                  <input name="patientName" placeholder="Patient name" style="flex:1;padding:0.5rem;" />
+                  <input name="date" type="date" style="padding:0.5rem;" />
+                  <input name="time" type="time" style="padding:0.5rem;" />
+                </div>
+                <div style="margin-top:0.6rem;">
+                  <button type="submit" class="btn">Book Appointment</button>
+                  <button type="button" id="sendReminder" class="btn outline">Send Reminder (demo)</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem;">
+            <div class="hms-card-content">
+              <h3>Case Sheets (recent)</h3>
+              <table style="width:100%;border-collapse:collapse;">
+                <thead>
+                  <tr>
+                    <th style="text-align:left;padding:0.4rem">Visit</th>
+                    <th style="text-align:left;padding:0.4rem">Date</th>
+                    <th style="text-align:left;padding:0.4rem">Summary</th>
+                  </tr>
+                </thead>
+                <tbody id="caseList">
+                  <tr>
+                    <td style="padding:0.4rem">OPD-1001</td>
+                    <td style="padding:0.4rem">2025-09-01</td>
+                    <td style="padding:0.4rem">Routine checkup</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:0.4rem">IPD-202</td>
+                    <td style="padding:0.4rem">2025-08-15</td>
+                    <td style="padding:0.4rem">Appendectomy follow-up</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <aside>
+          <div class="hms-card">
+            <div class="hms-card-content">
+              <h3>Queue Management</h3>
+              <table style="width:100%;border-collapse:collapse;font-size:0.95rem;">
+                <thead>
+                  <tr>
+                    <th style="text-align:left;padding:0.4rem">#</th>
+                    <th style="text-align:left;padding:0.4rem">Name</th>
+                    <th style="text-align:left;padding:0.4rem">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="queueTable">
+                  <tr>
+                    <td style="padding:0.4rem">1</td>
+                    <td style="padding:0.4rem">John Doe</td>
+                    <td style="padding:0.4rem">Waiting</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:0.4rem">2</td>
+                    <td style="padding:0.4rem">Sara Khan</td>
+                    <td style="padding:0.4rem">In Consultation</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div style="margin-top:0.6rem;display:flex;gap:0.4rem;">
+                <button id="callNext" class="btn">Call Next</button>
+                <button id="addDemo" class="btn outline">Add Demo Patient</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem;">
+            <div class="hms-card-content">
+              <h3>Consent Form Upload</h3>
+              <input id="consentFile" type="file" accept="application/pdf,image/*" />
+              <div id="consentPreview" style="margin-top:0.6rem;font-size:0.95rem;color:var(--subtitle);"></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="hms-actions" style="margin-top:1rem;">
+        <button class="btn">Search Patients</button>
+        <button class="btn outline">Export CSV</button>
+        <button class="btn">Bulk Import</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Simple MRN generator
+    function makeMrn() {
+      const prefix = 'MRN';
+      const now = Date.now().toString(36).toUpperCase();
+      const rand = Math.floor(Math.random() * 900 + 100);
+      return `${prefix}-${now}-${rand}`;
+    }
+
+    document.getElementById('genMrn').addEventListener('click', function () {
+      document.getElementById('mrn').value = makeMrn();
+    });
+
+    // Registration handler: adds to queue demo
+    document.getElementById('regForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const form = e.target;
+      const name = (form.firstName.value || '') + ' ' + (form.lastName.value || '');
+      const q = document.getElementById('queueTable');
+      const next = q.children.length + 1;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td style="padding:0.4rem">${next}</td><td style="padding:0.4rem">${name.trim() || 'Guest'}</td><td style="padding:0.4rem">Waiting</td>`;
+      q.appendChild(tr);
+      alert('Patient registered and added to queue (demo). MRN: ' + (form.mrn.value || '—'));
+      form.reset();
+      document.getElementById('mrn').value = '';
+    });
+
+    // Appointment demo
+    document.getElementById('apptForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      alert('Appointment booked (demo).');
+      e.target.reset();
+    });
+    document.getElementById('sendReminder').addEventListener('click', function () {
+      alert('Reminder sent (demo).');
+    });
+
+    // Queue controls
+    document.getElementById('callNext').addEventListener('click', function () {
+      const q = document.getElementById('queueTable');
+      if (!q.firstElementChild) return alert('Queue empty');
+      q.firstElementChild.children[2].textContent = 'In Consultation';
+      alert('Calling: ' + q.firstElementChild.children[1].textContent);
+    });
+    document.getElementById('addDemo').addEventListener('click', function () {
+      const q = document.getElementById('queueTable');
+      const next = q.children.length + 1;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td style="padding:0.4rem">${next}</td><td style="padding:0.4rem">Demo Patient ${next}</td><td style="padding:0.4rem">Waiting</td>`;
+      q.appendChild(tr);
+    });
+
+    // Consent preview (filename only in demo)
+    document.getElementById('consentFile').addEventListener('change', function (e) {
+      const file = e.target.files[0];
+      const p = document.getElementById('consentPreview');
+      if (!file) { p.textContent = ''; return; }
+      p.textContent = `Selected: ${file.name} (${Math.round(file.size / 1024)} KB)`;
+    });
+  </script>
+
+  <footer class="hms-footer">
+    <p>© 2025 Hospital Management System | Patient Module</p>
+  </footer>
+
+  <script src="../sidenav.js"></script>
+</body>
+
+</html>

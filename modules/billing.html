@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Billing & Invoicing | HMS</title>
+  <link href="../style.css" rel="stylesheet">
+</head>
+
+<body>
+  <nav class="hms-nav">
+    <a href="../dashboard.html">Dashboard</a>
+    <a href="patient.html">Patient</a>
+    <a href="doctor.html">Doctor & Staff</a>
+    <a href="emr.html">EMR/EHR</a>
+    <a href="billing.html" class="active">Billing</a>
+    <a href="pharmacy.html">Pharmacy</a>
+    <a href="lab.html">Laboratory</a>
+    <a href="inventory.html">Inventory</a>
+    <a href="room.html">Room/Bed</a>
+    <a href="reports.html">Reports</a>
+    <a href="security.html">Security</a>
+  </nav>
+
+  <header class="hms-header">
+    <div class="hms-hero">
+      <svg class="hms-hero-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+        <rect x="8" y="8" width="48" height="48" rx="12" fill="#00aaff" />
+      </svg>
+      <div>
+        <h1>Billing & Invoicing</h1>
+        <p class="subtitle">Create invoices, track payments and integrate with gateways.</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="hms-main">
+    <section class="hms-section">
+      <div class="hms-card">
+        <div class="hms-card-content">
+          <h2>Core Features</h2>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;">
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Service-wise Charges</h3>
+              <p>Define services with prices and GST applicability; use them when creating invoices.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Insurance Claims & TPA</h3>
+              <p>Record insurance coverage and mark invoices for claim submission.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Real-time Billing</h3>
+              <p>Instant calculation of subtotals, GST, discounts and payable amounts.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Refunds & Discounts</h3>
+              <p>Apply discounts, process refunds and compute tax adjustments.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Payments & Gateways</h3>
+              <p>Support multiple payment methods and mark invoices paid.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Invoice Print & Share</h3>
+              <p>Print or export invoices to PDF (via browser print) or share digitally.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 420px;gap:1.2rem;margin-top:1.2rem;align-items:start;">
+        <div>
+          <div class="hms-card">
+            <div class="hms-card-content">
+              <h3>Service Catalog (add/edit)</h3>
+              <form id="serviceForm" style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+                <input name="svcName" placeholder="Service name" style="flex:1;padding:0.5rem;min-width:150px;" />
+                <input name="svcPrice" placeholder="Price" type="number" step="0.01"
+                  style="padding:0.5rem;min-width:100px;" />
+                <label style="display:flex;align-items:center;gap:0.25rem;"><input name="svcGst" type="checkbox" />
+                  GST</label>
+                <button class="btn" type="submit">Add Service</button>
+              </form>
+              <table id="serviceTable" style="width:100%;margin-top:0.6rem;border-collapse:collapse;">
+                <thead>
+                  <tr>
+                    <th style="text-align:left;padding:0.4rem">Service</th>
+                    <th style="text-align:left;padding:0.4rem">Price</th>
+                    <th style="text-align:left;padding:0.4rem">GST</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem;">
+            <div class="hms-card-content">
+              <h3>Create Invoice</h3>
+              <form id="lineForm" style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+                <select name="service" id="serviceSelect" style="padding:0.5rem;min-width:180px;"></select>
+                <input name="qty" type="number" value="1" min="1" style="padding:0.5rem;min-width:80px;" />
+                <input name="disc" placeholder="Discount %" type="number" step="0.01"
+                  style="padding:0.5rem;min-width:100px;" />
+                <button class="btn" type="submit">Add to Invoice</button>
+              </form>
+
+              <table id="invoiceTable" style="width:100%;margin-top:0.6rem;border-collapse:collapse;">
+                <thead>
+                  <tr>
+                    <th style="text-align:left;padding:0.4rem">Item</th>
+                    <th style="text-align:left;padding:0.4rem">Qty</th>
+                    <th style="text-align:left;padding:0.4rem">Price</th>
+                    <th style="text-align:left;padding:0.4rem">GST</th>
+                    <th style="text-align:left;padding:0.4rem">Line Total</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+
+              <div style="margin-top:0.8rem;text-align:right;">
+                <div style="margin-bottom:0.25rem">Subtotal: <span id="subtotal">0.00</span></div>
+                <div style="margin-bottom:0.25rem">GST: <span id="gstTotal">0.00</span></div>
+                <div style="margin-bottom:0.25rem">Discount: <span id="discountTotal">0.00</span></div>
+                <div style="font-weight:600">Total: <span id="grandTotal">0.00</span></div>
+              </div>
+
+              <div style="margin-top:0.6rem;display:flex;gap:0.5rem;justify-content:flex-end;">
+                <button id="markPaid" class="btn">Mark Paid</button>
+                <button id="printInvoice" class="btn outline">Print / Share</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside>
+          <div class="hms-card">
+            <div class="hms-card-content">
+              <h3>Payment Methods</h3>
+              <p>Demo: Cash, Card, Online</p>
+              <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
+                <button id="payCash" class="btn">Pay Cash</button>
+                <button id="payCard" class="btn outline">Pay Card</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem;">
+            <div class="hms-card-content">
+              <h3>Insurance / TPA</h3>
+              <form id="insForm" style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                <input name="provider" placeholder="Provider" style="padding:0.5rem;min-width:160px;" />
+                <input name="coverage" placeholder="Coverage %" type="number" step="0.1"
+                  style="padding:0.5rem;min-width:100px;" />
+                <button class="btn" type="submit">Apply Coverage</button>
+              </form>
+              <div id="insStatus" style="margin-top:0.6rem;color:var(--subtitle);"></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="hms-actions" style="margin-top:1rem;">
+        <button id="btnCreateInvoice" class="btn">Create Invoice (save)</button>
+        <button id="btnRefund" class="btn outline">Process Refund</button>
+        <button class="btn">Generate Report</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Simple client-side demo billing
+    const services = [];
+    const GST_RATE = 0.18;
+
+    function format(n) { return Number(n).toFixed(2); }
+
+    function refreshServiceList() {
+      const tbody = document.querySelector('#serviceTable tbody'); tbody.innerHTML = '';
+      const sel = document.getElementById('serviceSelect'); sel.innerHTML = '';
+      services.forEach((s, i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td style="padding:0.4rem">${s.name}</td><td style="padding:0.4rem">${format(s.price)}</td><td style="padding:0.4rem">${s.gst ? 'Yes' : 'No'}</td>`;
+        tbody.appendChild(tr);
+        const opt = document.createElement('option'); opt.value = i; opt.textContent = `${s.name} — ${format(s.price)}`;
+        sel.appendChild(opt);
+      });
+    }
+
+    document.getElementById('serviceForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const f = e.target; const name = f.svcName.value.trim() || 'Service';
+      const price = parseFloat(f.svcPrice.value) || 0;
+      const gst = !!f.svcGst.checked;
+      services.push({ name, price, gst });
+      refreshServiceList();
+      f.reset();
+    });
+
+    const invoice = [];
+
+    function recalc() {
+      let subtotal = 0, gstTotal = 0, discountTotal = 0;
+      const tbody = document.querySelector('#invoiceTable tbody'); tbody.innerHTML = '';
+      invoice.forEach(line => {
+        const price = line.price * line.qty;
+        let gst = 0;
+        if (line.gst) gst = price * GST_RATE;
+        let discount = 0;
+        if (line.disc) discount = price * (line.disc / 100);
+        const lineTotal = price + gst - discount;
+        subtotal += price;
+        gstTotal += gst;
+        discountTotal += discount;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td style="padding:0.4rem">${line.name}</td><td style="padding:0.4rem">${line.qty}</td><td style="padding:0.4rem">${format(line.price)}</td><td style="padding:0.4rem">${format(gst)}</td><td style="padding:0.4rem">${format(lineTotal)}</td>`;
+        tbody.appendChild(tr);
+      });
+      document.getElementById('subtotal').textContent = format(subtotal);
+      document.getElementById('gstTotal').textContent = format(gstTotal);
+      document.getElementById('discountTotal').textContent = format(discountTotal);
+      document.getElementById('grandTotal').textContent = format(subtotal + gstTotal - discountTotal);
+    }
+
+    document.getElementById('lineForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const f = e.target; const idx = Number(f.service.value); const qty = Number(f.qty.value) || 1; const disc = Number(f.disc.value) || 0;
+      const svc = services[idx]; if (!svc) return alert('Please add a service first');
+      invoice.push({ name: svc.name, price: svc.price, gst: svc.gst, qty, disc });
+      recalc(); f.reset();
+    });
+
+    document.getElementById('insForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const f = e.target; const provider = f.provider.value || 'Provider'; const coverage = Number(f.coverage.value) || 0;
+      // Apply coverage to grand total (simple demo)
+      const total = Number(document.getElementById('grandTotal').textContent) || 0;
+      const covered = total * (coverage / 100);
+      document.getElementById('insStatus').textContent = `${provider} will cover ${coverage}% (${format(covered)}). Patient pays ${format(total - covered)}.`;
+    });
+
+    document.getElementById('markPaid').addEventListener('click', function () {
+      alert('Invoice marked paid (demo).');
+    });
+
+    document.getElementById('payCash').addEventListener('click', () => alert('Processed cash payment (demo).'));
+    document.getElementById('payCard').addEventListener('click', () => alert('Processed card payment (demo).'));
+
+    document.getElementById('printInvoice').addEventListener('click', function () {
+      const html = `<!doctype html><html><head><meta charset="utf-8"><title>Invoice</title><link href="../style.css" rel="stylesheet"></head><body><h2>Invoice (Demo)</h2>` +
+        document.querySelector('#invoiceTable').outerHTML + `<p>Subtotal: ${document.getElementById('subtotal').textContent}</p><p>GST: ${document.getElementById('gstTotal').textContent}</p><p>Total: ${document.getElementById('grandTotal').textContent}</p></body></html>`;
+      const w = window.open('', '_blank'); w.document.write(html); w.document.close(); w.print();
+    });
+
+    document.getElementById('btnRefund').addEventListener('click', function () {
+      alert('Processed refund (demo).');
+    });
+
+    // small initial data
+    services.push({ name: 'Consultation', price: 200, gst: true });
+    services.push({ name: 'CBC Test', price: 450, gst: true });
+    services.push({ name: 'X-Ray', price: 800, gst: true });
+    refreshServiceList();
+  </script>
+
+  <footer class="hms-footer">
+    <p>© 2025 Hospital Management System | Billing Module</p>
+  </footer>
+
+  <script src="../sidenav.js"></script>
+</body>
+
+</html>

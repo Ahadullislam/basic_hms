@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Room/Bed Management | HMS</title>
+  <link href="../style.css" rel="stylesheet">
+</head>
+
+<body>
+  <nav class="hms-nav">
+    <a href="../dashboard.html">Dashboard</a>
+    <a href="patient.html">Patient</a>
+    <a href="doctor.html">Doctor & Staff</a>
+    <a href="emr.html">EMR/EHR</a>
+    <a href="billing.html">Billing</a>
+    <a href="pharmacy.html">Pharmacy</a>
+    <a href="lab.html">Laboratory</a>
+    <a href="inventory.html">Inventory</a>
+    <a href="room.html" class="active">Room/Bed</a>
+    <a href="reports.html">Reports</a>
+    <a href="security.html">Security</a>
+  </nav>
+
+  <header class="hms-header">
+    <div class="hms-hero">
+      <svg class="hms-hero-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+        <rect x="8" y="8" width="48" height="48" rx="12" fill="#3498db" />
+      </svg>
+      <div>
+        <h1>Room & Bed Management</h1>
+        <p class="subtitle">Handle bed allocation, occupancy and room charges.</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="hms-main">
+    <section class="hms-section">
+      <div class="hms-card">
+        <div class="hms-card-content">
+          <h2>Core Features</h2>
+          <ul>
+            <li>Floor, ward and room type configuration</li>
+            <li>Real-time occupancy dashboard</li>
+            <li>Bed allotment and transfer workflows</li>
+            <li>ICU/Isolation status and alerts</li>
+            <li>Cleaning and turnaround tracking</li>
+            <li>Automatic room charge calculation</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="hms-actions" style="margin-top:1rem;">
+        <button class="btn">Allocate Bed</button>
+        <button class="btn outline">Transfer Patient</button>
+        <button class="btn">View Occupancy</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="hms-footer">
+    <p>© 2025 Hospital Management System | Room/Bed Module</p>
+  </footer>
+
+  <script src="../sidenav.js"></script>
+</body>
+
+</html>

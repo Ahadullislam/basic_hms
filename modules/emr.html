@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EMR / EHR | HMS</title>
+  <link href="../style.css" rel="stylesheet">
+</head>
+
+<body>
+  <nav class="hms-nav">
+    <a href="../dashboard.html">Dashboard</a>
+    <a href="patient.html">Patient</a>
+    <a href="doctor.html">Doctor & Staff</a>
+    <a href="emr.html" class="active">EMR/EHR</a>
+    <a href="billing.html">Billing</a>
+    <a href="pharmacy.html">Pharmacy</a>
+    <a href="lab.html">Laboratory</a>
+    <a href="inventory.html">Inventory</a>
+    <a href="room.html">Room/Bed</a>
+    <a href="reports.html">Reports</a>
+    <a href="security.html">Security</a>
+  </nav>
+
+  <header class="hms-header">
+    <div class="hms-hero">
+      <svg class="hms-hero-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+        <rect x="8" y="8" width="48" height="48" rx="12" fill="#ffb86b" />
+      </svg>
+      <div>
+        <h1>Electronic Medical Records (EMR)</h1>
+        <p class="subtitle">Capture clinical notes, vitals, prescriptions and documents.</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="hms-main">
+    <section class="hms-section">
+      <div class="hms-card">
+        <div class="hms-card-content">
+          <h2>Core Features</h2>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;">
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Medical History</h3>
+              <p>Maintain past diagnoses, procedures and treatment summaries.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Vitals Capture</h3>
+              <p>Record vitals and view short-term trends at a glance.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Clinical / SOAP Notes</h3>
+              <p>Structured SOAP notes and free-text clinical documentation.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Diagnosis (ICD-10)</h3>
+              <p>Tag visits with ICD-10 codes and store structured diagnoses.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Prescription Generator</h3>
+              <p>Create prescriptions, print or export for pharmacy.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Document Uploads</h3>
+              <p>Attach images, scans and PDFs to a patient's record.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 420px;gap:1.2rem;margin-top:1.2rem;align-items:start;">
+        <div>
+          <div class="hms-card">
+            <div class="hms-card-content">
+              <h3>Medical History (demo)</h3>
+              <form id="histForm" style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                <input name="title" placeholder="Event title (e.g. Appendectomy)" style="flex:1;padding:0.5rem;" />
+                <input name="date" type="date" style="padding:0.5rem;" />
+                <button class="btn" type="submit">Add</button>
+              </form>
+              <ul id="historyList" style="margin-top:0.6rem;">
+                <li>2019-06-10: Tonsillectomy</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem;">
+            <div class="hms-card-content">
+              <h3>Vitals Capture</h3>
+              <form id="vitalsForm" style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+                <input name="bp" placeholder="BP (120/80)" style="padding:0.5rem;min-width:130px;" />
+                <input name="hr" placeholder="HR (bpm)" type="number" style="padding:0.5rem;min-width:80px;" />
+                <input name="temp" placeholder="Temp (°C)" type="number" step="0.1"
+                  style="padding:0.5rem;min-width:100px;" />
+                <button class="btn" type="submit">Record</button>
+              </form>
+              <table id="vitalsTable" style="width:100%;margin-top:0.6rem;border-collapse:collapse;">
+                <thead>
+                  <tr>
+                    <th style="text-align:left;padding:0.4rem">Time</th>
+                    <th style="text-align:left;padding:0.4rem">BP</th>
+                    <th style="text-align:left;padding:0.4rem">HR</th>
+                    <th style="text-align:left;padding:0.4rem">Temp</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="padding:0.4rem">2025-09-01 09:20</td>
+                    <td style="padding:0.4rem">118/76</td>
+                    <td style="padding:0.4rem">72</td>
+                    <td style="padding:0.4rem">36.7</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem;">
+            <div class="hms-card-content">
+              <h3>SOAP / Clinical Note</h3>
+              <form id="soapForm">
+                <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                  <input name="subjective" placeholder="Subjective" style="flex:1;padding:0.5rem;min-width:160px;" />
+                  <input name="objective" placeholder="Objective" style="flex:1;padding:0.5rem;min-width:160px;" />
+                </div>
+                <div style="margin-top:0.6rem;">
+                  <input name="assessment" placeholder="Assessment" style="width:100%;padding:0.5rem;" />
+                </div>
+                <div style="margin-top:0.6rem;">
+                  <input name="plan" placeholder="Plan" style="width:100%;padding:0.5rem;" />
+                </div>
+                <div style="margin-top:0.6rem;display:flex;gap:0.4rem;">
+                  <button class="btn" type="submit">Save Note</button>
+                  <button type="button" id="clearNotes" class="btn outline">Clear Notes</button>
+                </div>
+              </form>
+              <div id="soapList" style="margin-top:0.6rem;color:var(--subtitle);">
+                <p><strong>Recent:</strong></p>
+                <ul>
+                  <li>2025-09-01: Follow-up for hypertension. Plan: adjust meds.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem;">
+            <div class="hms-card-content">
+              <h3>Prescription Generator</h3>
+              <form id="rxForm" style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+                <input name="drug" placeholder="Drug name" style="padding:0.5rem;min-width:140px;" />
+                <input name="dose" placeholder="Dose (e.g. 500 mg)" style="padding:0.5rem;min-width:120px;" />
+                <input name="freq" placeholder="Frequency (e.g. 1 bd)" style="padding:0.5rem;min-width:120px;" />
+                <button class="btn" type="submit">Add</button>
+              </form>
+              <table id="rxTable" style="width:100%;margin-top:0.6rem;border-collapse:collapse;">
+                <thead>
+                  <tr>
+                    <th style="text-align:left;padding:0.4rem">Drug</th>
+                    <th style="text-align:left;padding:0.4rem">Dose</th>
+                    <th style="text-align:left;padding:0.4rem">Frequency</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+              <div style="margin-top:0.6rem;display:flex;gap:0.4rem;">
+                <button id="printRx" class="btn">Print Prescription</button>
+                <button id="clearRx" class="btn outline">Clear</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside>
+          <div class="hms-card">
+            <div class="hms-card-content">
+              <h3>Diagnosis (ICD-10 demo)</h3>
+              <form id="diagForm" style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+                <select name="icd" style="padding:0.5rem;min-width:200px;">
+                  <option value="I10">I10 — Essential (primary) hypertension</option>
+                  <option value="E11">E11 — Type 2 diabetes mellitus</option>
+                  <option value="J06.9">J06.9 — Acute upper respiratory infection</option>
+                  <option value="K35">K35 — Acute appendicitis</option>
+                </select>
+                <button class="btn" type="submit">Add</button>
+              </form>
+              <ul id="diagList" style="margin-top:0.6rem;">
+                <li>I10 — Essential (primary) hypertension</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem;">
+            <div class="hms-card-content">
+              <h3>Document Uploads</h3>
+              <input id="docUpload" type="file" accept="image/*,application/pdf" multiple />
+              <div id="docList" style="margin-top:0.6rem;color:var(--subtitle);"></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="hms-actions" style="margin-top:1rem;">
+        <button class="btn">Open Patient Record</button>
+        <button class="btn outline">Add Clinical Note</button>
+        <button class="btn">Generate Prescription</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Medical history demo
+    document.getElementById('histForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const f = e.target;
+      const title = f.title.value || 'Event';
+      const date = f.date.value || new Date().toISOString().slice(0, 10);
+      const ul = document.getElementById('historyList');
+      const li = document.createElement('li');
+      li.textContent = `${date}: ${title}`;
+      ul.appendChild(li);
+      f.reset();
+    });
+
+    // Vitals demo
+    document.getElementById('vitalsForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const f = e.target;
+      const bp = f.bp.value || '-';
+      const hr = f.hr.value || '-';
+      const temp = f.temp.value || '-';
+      const tb = document.getElementById('vitalsTable').querySelector('tbody');
+      const now = new Date();
+      const time = now.toISOString().slice(0, 16).replace('T', ' ');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td style="padding:0.4rem">${time}</td><td style="padding:0.4rem">${bp}</td><td style="padding:0.4rem">${hr}</td><td style="padding:0.4rem">${temp}</td>`;
+      tb.appendChild(tr);
+      f.reset();
+    });
+
+    // SOAP notes demo
+    document.getElementById('soapForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const f = e.target;
+      const subj = f.subjective.value || '';
+      const obj = f.objective.value || '';
+      const assessment = f.assessment.value || '';
+      const plan = f.plan.value || '';
+      const area = document.getElementById('soapList');
+      const p = document.createElement('p');
+      p.textContent = `${new Date().toISOString().slice(0, 10)} — S:${subj} | O:${obj} | A:${assessment} | P:${plan}`;
+      area.appendChild(p);
+      f.reset();
+    });
+    document.getElementById('clearNotes').addEventListener('click', function () {
+      document.getElementById('soapList').innerHTML = '';
+    });
+
+    // Prescription demo
+    document.getElementById('rxForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const f = e.target;
+      const drug = f.drug.value || 'Untitled';
+      const dose = f.dose.value || '-';
+      const freq = f.freq.value || '-';
+      const tb = document.getElementById('rxTable').querySelector('tbody');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td style="padding:0.4rem">${drug}</td><td style="padding:0.4rem">${dose}</td><td style="padding:0.4rem">${freq}</td>`;
+      tb.appendChild(tr);
+      f.reset();
+    });
+    document.getElementById('clearRx').addEventListener('click', function () {
+      document.getElementById('rxTable').querySelector('tbody').innerHTML = '';
+    });
+    document.getElementById('printRx').addEventListener('click', function () {
+      const rows = Array.from(document.getElementById('rxTable').querySelectorAll('tbody tr'));
+      if (rows.length === 0) return alert('No medications to print');
+      let html = `<html><head><title>Prescription</title><link href="../style.css" rel="stylesheet"></head><body><h2>Prescription</h2><table style="width:100%;border-collapse:collapse;">`;
+      html += '<thead><tr><th style="text-align:left;padding:0.4rem">Drug</th><th style="text-align:left;padding:0.4rem">Dose</th><th style="text-align:left;padding:0.4rem">Frequency</th></tr></thead><tbody>';
+      rows.forEach(r => { html += `<tr>${r.innerHTML}</tr>`; });
+      html += '</tbody></table><p>Printed: ' + new Date().toLocaleString() + '</p></body></html>';
+      const w = window.open('', '_blank');
+      w.document.write(html);
+      w.document.close();
+      w.print();
+    });
+
+    // Diagnosis demo
+    document.getElementById('diagForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const f = e.target;
+      const sel = f.icd;
+      const text = sel.options[sel.selectedIndex].text;
+      const ul = document.getElementById('diagList');
+      const li = document.createElement('li');
+      li.textContent = text;
+      ul.appendChild(li);
+    });
+
+    // Document uploads
+    document.getElementById('docUpload').addEventListener('change', function (e) {
+      const out = document.getElementById('docList');
+      out.innerHTML = '';
+      const files = Array.from(e.target.files || []);
+      files.forEach(f => {
+        const p = document.createElement('div');
+        p.textContent = `${f.name} (${Math.round(f.size / 1024)} KB)`;
+        out.appendChild(p);
+      });
+    });
+  </script>
+
+  <footer class="hms-footer">
+    <p>© 2025 Hospital Management System | EMR/EHR Module</p>
+  </footer>
+
+  <script src="../sidenav.js"></script>
+</body>
+
+</html>

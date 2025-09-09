@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor & Staff Management | HMS</title>
+  <link href="../style.css" rel="stylesheet">
+</head>
+
+<body>
+  <nav class="hms-nav">
+    <a href="../dashboard.html">Dashboard</a>
+    <a href="patient.html">Patient</a>
+    <a href="doctor.html" class="active">Doctor & Staff</a>
+    <a href="emr.html">EMR/EHR</a>
+    <a href="billing.html">Billing</a>
+    <a href="pharmacy.html">Pharmacy</a>
+    <a href="lab.html">Laboratory</a>
+    <a href="inventory.html">Inventory</a>
+    <a href="room.html">Room/Bed</a>
+    <a href="reports.html">Reports</a>
+    <a href="security.html">Security</a>
+  </nav>
+
+  <header class="hms-header">
+    <div class="hms-hero">
+      <svg class="hms-hero-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+        <rect x="8" y="8" width="48" height="48" rx="12" fill="var(--accent)" />
+      </svg>
+      <div>
+        <h1>Doctor & Staff Management</h1>
+        <p class="subtitle">Manage profiles, schedules, shifts and internal tasks.</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="hms-main">
+    <section class="hms-section">
+      <div class="hms-card">
+        <div class="hms-card-content">
+          <h2>Core Features</h2>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;">
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Doctor Profiles</h3>
+              <p>Create and manage doctor/staff profiles with specialties, contact and credentials.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Schedules & Calendar</h3>
+              <p>Assign time slots, integrate with calendars and manage availability.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Roles & Payroll</h3>
+              <p>Define roles, permissions and basic payroll settings for staff.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Shifts & Leave</h3>
+              <p>Create rotas, assign shifts and track leave or swap requests.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Digital Signatures</h3>
+              <p>Upload and manage digital signatures and secure documentation.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Messaging & Tasks</h3>
+              <p>Internal messaging and task assignment for coordination.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 420px;gap:1.2rem;margin-top:1.2rem;align-items:start;">
+        <div>
+          <div class="hms-card">
+            <div class="hms-card-content">
+              <h3>Add Doctor Profile (demo)</h3>
+              <form id="doctorForm">
+                <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+                  <input name="name" placeholder="Name" required style="flex:1;min-width:160px;padding:0.5rem;" />
+                  <input name="specialty" placeholder="Specialty" style="flex:1;min-width:160px;padding:0.5rem;" />
+                </div>
+                <div style="margin-top:0.6rem;display:flex;gap:0.6rem;">
+                  <input name="phone" placeholder="Phone" style="flex:1;padding:0.5rem;min-width:140px;" />
+                  <select name="role" style="padding:0.5rem;min-width:160px;">
+                    <option>Doctor</option>
+                    <option>Nurse</option>
+                    <option>Technician</option>
+                    <option>Admin</option>
+                  </select>
+                </div>
+                <div style="margin-top:0.8rem;display:flex;gap:0.6rem;">
+                  <button class="btn" type="submit">Save Profile</button>
+                  <button type="button" id="exportStaff" class="btn outline">Export Staff (demo)</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem;">
+            <div class="hms-card-content">
+              <h3>Schedules (demo)</h3>
+              <form id="scheduleForm" style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+                <input name="docName" placeholder="Doctor name" style="padding:0.5rem;flex:1;min-width:140px;" />
+                <input name="date" type="date" style="padding:0.5rem;" />
+                <input name="from" type="time" style="padding:0.5rem;" />
+                <input name="to" type="time" style="padding:0.5rem;" />
+                <button class="btn" type="submit">Add</button>
+              </form>
+              <table id="scheduleTable" style="width:100%;margin-top:0.6rem;border-collapse:collapse;">
+                <thead>
+                  <tr>
+                    <th style="text-align:left;padding:0.4rem">Doctor</th>
+                    <th style="text-align:left;padding:0.4rem">Date</th>
+                    <th style="text-align:left;padding:0.4rem">Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="padding:0.4rem">Dr. Priya</td>
+                    <td style="padding:0.4rem">2025-09-05</td>
+                    <td style="padding:0.4rem">09:00-12:00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem;">
+            <div class="hms-card-content">
+              <h3>Shifts & Leave (demo)</h3>
+              <form id="shiftForm" style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+                <input name="shiftName" placeholder="Shift name (e.g. Night)"
+                  style="padding:0.5rem;flex:1;min-width:140px;" />
+                <input name="start" type="time" style="padding:0.5rem;" />
+                <input name="end" type="time" style="padding:0.5rem;" />
+                <button class="btn" type="submit">Create Shift</button>
+              </form>
+              <ul id="shiftList" style="margin-top:0.6rem;">
+                <li>Morning: 07:00-15:00</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <aside>
+          <div class="hms-card">
+            <div class="hms-card-content">
+              <h3>Digital Signature & Docs</h3>
+              <input id="sigFile" type="file" accept="image/*,application/pdf" />
+              <div id="sigPreview" style="margin-top:0.6rem;color:var(--subtitle);"></div>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem;">
+            <div class="hms-card-content">
+              <h3>Internal Messaging</h3>
+              <form id="msgForm">
+                <input name="to" placeholder="To (role/person)" style="width:100%;padding:0.5rem;" />
+                <textarea name="message" placeholder="Message"
+                  style="width:100%;padding:0.5rem;margin-top:0.5rem;min-height:80px;"></textarea>
+                <div style="margin-top:0.6rem;display:flex;gap:0.4rem;">
+                  <button class="btn" type="submit">Send</button>
+                  <button type="button" id="clearMsgs" class="btn outline">Clear Messages</button>
+                </div>
+              </form>
+              <ul id="messages"
+                style="margin-top:0.6rem;list-style:none;padding-left:0;font-size:0.95rem;color:var(--subtitle);">
+                <li><strong>Admin</strong>: Welcome to the staff portal.</li>
+              </ul>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="hms-actions" style="margin-top:1rem;">
+        <button id="btnAddDocDemo" class="btn">Add Demo Doctor</button>
+        <button class="btn outline">Manage Schedules</button>
+        <button class="btn">Export Staff List</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Doctor profile demo
+    document.getElementById('doctorForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const f = e.target;
+      const name = f.name.value.trim() || 'Unnamed';
+      const spec = f.specialty.value.trim() || 'General';
+      const role = f.role.value;
+      const tbody = document.querySelector('#scheduleTable tbody');
+      // add a sample schedule row to indicate saved profile (demo)
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td style="padding:0.4rem">${name} (${role})</td><td style="padding:0.4rem">—</td><td style="padding:0.4rem">—</td>`;
+      tbody.appendChild(tr);
+      alert('Profile saved (demo): ' + name + ' — ' + spec);
+      f.reset();
+    });
+
+    document.getElementById('exportStaff').addEventListener('click', function () {
+      alert('Exported staff list (demo).');
+    });
+
+    // Schedule demo
+    document.getElementById('scheduleForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const f = e.target;
+      const doc = f.docName.value || 'Unknown';
+      const date = f.date.value || '—';
+      const from = f.from.value || '—';
+      const to = f.to.value || '—';
+      const tb = document.getElementById('scheduleTable').querySelector('tbody');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td style="padding:0.4rem">${doc}</td><td style="padding:0.4rem">${date}</td><td style="padding:0.4rem">${from}-${to}</td>`;
+      tb.appendChild(tr);
+      f.reset();
+    });
+
+    // Shifts demo
+    document.getElementById('shiftForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const f = e.target;
+      const name = f.shiftName.value || 'Shift';
+      const start = f.start.value || '00:00';
+      const end = f.end.value || '00:00';
+      const li = document.createElement('li');
+      li.textContent = `${name}: ${start}-${end}`;
+      document.getElementById('shiftList').appendChild(li);
+      f.reset();
+    });
+
+    // Signature preview
+    document.getElementById('sigFile').addEventListener('change', function (e) {
+      const f = e.target.files[0];
+      const p = document.getElementById('sigPreview');
+      if (!f) { p.textContent = ''; return; }
+      p.textContent = `Selected: ${f.name} (${Math.round(f.size / 1024)} KB)`;
+    });
+
+    // Messaging demo
+    document.getElementById('msgForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const f = e.target;
+      const to = f.to.value || 'All';
+      const msg = f.message.value || '';
+      if (!msg.trim()) return alert('Please enter a message');
+      const ul = document.getElementById('messages');
+      const li = document.createElement('li');
+      li.innerHTML = `<strong>${to}</strong>: ${msg}`;
+      ul.appendChild(li);
+      f.reset();
+    });
+    document.getElementById('clearMsgs').addEventListener('click', function () {
+      document.getElementById('messages').innerHTML = '';
+    });
+
+    // Quick demo add
+    document.getElementById('btnAddDocDemo').addEventListener('click', function () {
+      const tb = document.getElementById('scheduleTable').querySelector('tbody');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td style="padding:0.4rem">Dr. Demo</td><td style="padding:0.4rem">2025-09-10</td><td style="padding:0.4rem">10:00-14:00</td>`;
+      tb.appendChild(tr);
+    });
+  </script>
+
+  <footer class="hms-footer">
+    <p>© 2025 Hospital Management System | Doctor & Staff Module</p>
+  </footer>
+
+  <script src="../sidenav.js"></script>
+</body>
+
+</html>

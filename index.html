@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="0;url=dashboard.html" />
+  <title>Redirecting...</title>
+</head>
+
+<body>
+  <!-- Hamburger menu for sidenav toggle -->
+  <div id="hms-hamburger" class="hms-hamburger" aria-label="Open navigation" tabindex="0">
+    <span></span><span></span><span></span>
+  </div>
+  <!-- Side Navigation -->
+  <nav id="hms-sidenav" class="hms-sidenav">
+    <a href="#patient">Patient</a>
+    <a href="#doctor">Doctor & Staff</a>
+    <a href="#emr">EMR/EHR</a>
+    <a href="#billing">Billing</a>
+    <a href="#pharmacy">Pharmacy</a>
+    <a href="#lab">Laboratory</a>
+    <a href="#inventory">Inventory</a>
+    <a href="#room">Room/Bed</a>
+    <a href="#reports">Reports</a>
+    <a href="#security">Security</a>
+  </nav>
+  <div id="hms-sidenav-overlay" class="hms-sidenav-overlay"></div>
+
+  <header class="hms-header">
+    <div class="hms-hero">
+      <svg class="hms-hero-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+        <defs>
+          <linearGradient id="hmsGradient" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0%" stop-color="#4f8cff" />
+            <stop offset="100%" stop-color="#3ddad7" />
+          </linearGradient>
+        </defs>
+        <rect x="8" y="8" width="48" height="48" rx="12" fill="url(#hmsGradient)" />
+        <path d="M32 20v24M20 32h24" stroke="#fff" stroke-width="4" stroke-linecap="round" />
+      </svg>
+      <div>
+        <h1>Hospital Management System</h1>
+        <p class="subtitle">Modern, Integrated, and Efficient Healthcare Platform</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="hms-main">
+    <section class="hms-section" id="patient">
+      <div class="hms-card">
+        <div class="hms-card-icon patient">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <defs>
+              <linearGradient id="patientGradient" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stop-color="#6a82fb" />
+                <stop offset="100%" stop-color="#fc5c7d" />
+              </linearGradient>
+            </defs>
+            <circle cx="24" cy="16" r="8" fill="url(#patientGradient)" />
+            <ellipse cx="24" cy="34" rx="14" ry="9" fill="url(#patientGradient)" opacity="0.6" />
+          </svg>
+        </div>
+        <div class="hms-card-content">
+          <h2>Patient Management</h2>
+          <ul>
+            <li>Registration (OPD, IPD, Emergency)</li>
+            <li>Demographics, contact, family history</li>
+            <li>Appointment booking & reminders</li>
+            <li>Queue management</li>
+            <li>Visit history & timeline</li>
+            <li>Case sheets, past treatments</li>
+            <li>Referral tracking</li>
+            <li>ID/Barcode/MRN generator</li>
+            <li>Consent form management</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <section class="hms-section" id="doctor">
+      <div class="hms-card">
+        <div class="hms-card-icon doctor">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <defs>
+              <linearGradient id="doctorGradient" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stop-color="#43cea2" />
+                <stop offset="100%" stop-color="#185a9d" />
+              </linearGradient>
+            </defs>
+            <circle cx="24" cy="16" r="8" fill="url(#doctorGradient)" />
+            <rect x="12" y="28" width="24" height="12" rx="6" fill="url(#doctorGradient)" opacity="0.6" />
+          </svg>
+        </div>
+        <div class="hms-card-content">
+          <h2>Doctor & Staff Management</h2>
+          <ul>
+            <li>Doctor profiles & schedules</li>
+            <li>Calendar integration</li>
+            <li>Staff profiles & roles</li>
+            <li>Shift & rota management</li>
+            <li>Leave/holiday tracking</li>
+            <li>Digital signatures</li>
+            <li>Payroll & task assignments</li>
+            <li>Internal communication</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <section class="hms-section" id="emr">
+      <div class="hms-card">
+        <div class="hms-card-icon emr">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <defs>
+              <linearGradient id="emrGradient" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stop-color="#f7971e" />
+                <stop offset="100%" stop-color="#ffd200" />
+              </linearGradient>
+            </defs>
+            <rect x="8" y="8" width="32" height="32" rx="8" fill="url(#emrGradient)" />
+            <rect x="16" y="16" width="16" height="16" rx="4" fill="#fff" opacity="0.7" />
+          </svg>
+        </div>
+        <div class="hms-card-content">
+          <h2>EMR / EHR</h2>
+          <ul>
+            <li>Medical history</li>
+            <li>Current visit details</li>
+            <li>Vitals monitoring</li>
+            <li>Clinical/SOAP notes</li>
+            <li>Diagnosis & ICD-10</li>
+            <li>Prescription generator</li>
+            <li>Document uploads</li>
+            <li>Vaccination & allergies</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <section class="hms-section" id="billing">
+      <div class="hms-card">
+        <div class="hms-card-icon billing">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <defs>
+              <linearGradient id="billingGradient" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stop-color="#00c6ff" />
+                <stop offset="100%" stop-color="#0072ff" />
+              </linearGradient>
+            </defs>
+            <rect x="10" y="14" width="28" height="20" rx="6" fill="url(#billingGradient)" />
+            <rect x="18" y="20" width="12" height="8" rx="2" fill="#fff" opacity="0.7" />
+          </svg>
+        </div>
+        <div class="hms-card-content">
+          <h2>Billing & Invoicing</h2>
+          <ul>
+            <li>Service-wise charge setup</li>
+            <li>Insurance claim tracking</li>
+            <li>Real-time billing updates</li>
+            <li>TPA integration</li>
+            <li>Refunds & discounts</li>
+            <li>Payment gateway integration</li>
+            <li>Tax and GST calculation</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <section class="hms-section" id="pharmacy">
+      <div class="hms-card">
+        <div class="hms-card-icon pharmacy">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <defs>
+              <linearGradient id="pharmacyGradient" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stop-color="#f7971e" />
+                <stop offset="100%" stop-color="#ffd200" />
+              </linearGradient>
+            </defs>
+            <rect x="12" y="12" width="24" height="24" rx="8" fill="url(#pharmacyGradient)" />
+            <rect x="20" y="20" width="8" height="8" rx="2" fill="#fff" opacity="0.7" />
+          </svg>
+        </div>
+        <div class="hms-card-content">
+          <h2>Pharmacy Management</h2>
+          <ul>
+            <li>Drug catalog & stock</li>
+            <li>Batch & expiry tracking</li>
+            <li>Barcode scanning</li>
+            <li>Low-stock alerts</li>
+            <li>Prescription-to-pharmacy flow</li>
+            <li>Vendor & purchase orders</li>
+            <li>Drug return & damage log</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <section class="hms-section" id="lab">
+      <div class="hms-card">
+        <div class="hms-card-icon lab">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <defs>
+              <linearGradient id="labGradient" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stop-color="#43cea2" />
+                <stop offset="100%" stop-color="#185a9d" />
+              </linearGradient>
+            </defs>
+            <ellipse cx="24" cy="24" rx="14" ry="10" fill="url(#labGradient)" />
+            <rect x="18" y="14" width="12" height="20" rx="6" fill="#fff" opacity="0.7" />
+          </svg>
+        </div>
+        <div class="hms-card-content">
+          <h2>Laboratory Management</h2>
+          <ul>
+            <li>Lab test catalogue</li>
+            <li>Test order creation</li>
+            <li>Sample collection tracking</li>
+            <li>Lab workflow & reporting</li>
+            <li>Result entry & auto-flagging</li>
+            <li>Digital report delivery</li>
+            <li>Lab billing integration</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <section class="hms-section" id="inventory">
+      <div class="hms-card">
+        <div class="hms-card-icon inventory">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <defs>
+              <linearGradient id="inventoryGradient" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stop-color="#4f8cff" />
+                <stop offset="100%" stop-color="#3ddad7" />
+              </linearGradient>
+            </defs>
+            <rect x="10" y="10" width="28" height="28" rx="8" fill="url(#inventoryGradient)" />
+            <rect x="18" y="18" width="12" height="12" rx="3" fill="#fff" opacity="0.7" />
+          </svg>
+        </div>
+        <div class="hms-card-content">
+          <h2>Inventory/Asset Management</h2>
+          <ul>
+            <li>Master catalog of items</li>
+            <li>Stock level monitor</li>
+            <li>Procurement & vendor quotes</li>
+            <li>Issue/return logs</li>
+            <li>Expiry & maintenance tracking</li>
+            <li>Department-wise distribution</li>
+            <li>Usage audit & alerts</li>
+            <li>Barcode/QR code tagging</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <section class="hms-section" id="room">
+      <div class="hms-card">
+        <div class="hms-card-icon room">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <defs>
+              <linearGradient id="roomGradient" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stop-color="#00c6ff" />
+                <stop offset="100%" stop-color="#0072ff" />
+              </linearGradient>
+            </defs>
+            <rect x="10" y="18" width="28" height="16" rx="8" fill="url(#roomGradient)" />
+            <rect x="18" y="22" width="12" height="8" rx="2" fill="#fff" opacity="0.7" />
+          </svg>
+        </div>
+        <div class="hms-card-content">
+          <h2>Room/Bed Management</h2>
+          <ul>
+            <li>Floor/ward/room type config</li>
+            <li>Real-time occupancy dashboard</li>
+            <li>Bed allotment & transfer</li>
+            <li>ICU/Isolation status</li>
+            <li>Bed cleaning & turnaround</li>
+            <li>Room charge calculation</li>
+            <li>Assignments & alerts</li>
+            <li>Nursing dashboard</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <section class="hms-section" id="reports">
+      <div class="hms-card">
+        <div class="hms-card-icon reports">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <defs>
+              <linearGradient id="reportsGradient" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stop-color="#6a82fb" />
+                <stop offset="100%" stop-color="#fc5c7d" />
+              </linearGradient>
+            </defs>
+            <rect x="12" y="12" width="24" height="24" rx="8" fill="url(#reportsGradient)" />
+            <rect x="20" y="20" width="8" height="8" rx="2" fill="#fff" opacity="0.7" />
+          </svg>
+        </div>
+        <div class="hms-card-content">
+          <h2>Reports & Analytics</h2>
+          <ul>
+            <li>Daily OPD/IPD reports</li>
+            <li>Revenue breakdown</li>
+            <li>Patient & inventory trends</li>
+            <li>Lab test & occupancy reports</li>
+            <li>Staff duty/time logs</li>
+            <li>Billing summaries</li>
+            <li>Compliance & custom reports</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <section class="hms-section" id="security">
+      <div class="hms-card">
+        <div class="hms-card-icon security">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <defs>
+              <linearGradient id="securityGradient" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stop-color="#43cea2" />
+                <stop offset="100%" stop-color="#185a9d" />
+              </linearGradient>
+            </defs>
+            <rect x="12" y="16" width="24" height="16" rx="8" fill="url(#securityGradient)" />
+            <rect x="20" y="20" width="8" height="8" rx="2" fill="#fff" opacity="0.7" />
+          </svg>
+        </div>
+        <div class="hms-card-content">
+          <h2>Security & User Access</h2>
+          <ul>
+            <li>Role-based permission system</li>
+            <li>Two-factor authentication</li>
+            <li>Password policy enforcement</li>
+            <li>Access logs & audit trails</li>
+            <li>Data encryption & backup</li>
+            <li>Export controls & compliance</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="hms-footer">
+    <section class="hms-section" id="feature-overview" style="margin-top:3rem;">
+      <div class="hms-card" style="max-width:1200px;width:100%;margin:0 auto;">
+        <h2 style="color:var(--primary);margin-bottom:1.5rem;text-align:center;">Feature Overview</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:2.2rem;">
+          <div>
+            <h3 style="color:var(--primary);margin-bottom:0.5rem;">1. Patient Management</h3>
+            <ul style="color:var(--subtitle);font-size:1.05rem;">
+              <li>Patient registration (OPD, IPD, Emergency)</li>
+              <li>Demographics, contact, family history</li>
+              <li>Appointment booking (walk-in, call, online portal)</li>
+              <li>Appointment reminders (SMS/Email)</li>
+              <li>Queue management</li>
+              <li>Visit history with timeline</li>
+              <li>Case sheets and past treatments</li>
+              <li>Referral tracking (internal or external)</li>
+              <li>Patient ID / Barcode / MRN generator</li>
+              <li>Consent form management</li>
+            </ul>
+          </div>
+          <div>
+            <h3 style="color:var(--primary);margin-bottom:0.5rem;">2. Doctor & Staff Management</h3>
+            <ul style="color:var(--subtitle);font-size:1.05rem;">
+              <li>Doctor profiles (specialty, availability, schedules)</li>
+              <li>Calendar integration</li>
+              <li>Staff profile (nurses, technicians, admin staff)</li>
+              <li>Role-based access & duties</li>
+              <li>Shift & Rota management</li>
+              <li>Leave/holiday tracking</li>
+              <li>Digital signature for prescriptions/reports</li>
+              <li>Payroll tracking (basic for HR integration)</li>
+              <li>Task assignments (to nurses, assistants)</li>
+              <li>Internal communication (chat or notification system)</li>
+            </ul>
+          </div>
+          <div>
+            <h3 style="color:var(--primary);margin-bottom:0.5rem;">3. Electronic Medical Records (EMR) / EHR</h3>
+            <ul style="color:var(--subtitle);font-size:1.05rem;">
+              <li>Medical history (chronic diseases, surgeries)</li>
+              <li>Current visit details</li>
+              <li>Vitals monitoring (BP, glucose, etc.)</li>
+              <li>Clinical notes / SOAP notes</li>
+              <li>Diagnosis and ICD-10 codes</li>
+              <li>Prescription generator (drug name, dose, frequency)</li>
+              <li>Prescription printing / digital sharing</li>
+              <li>Document uploads (X-rays, ECG, lab results)</li>
+              <li>Vaccination records</li>
+              <li>Allergies / alerts</li>
+            </ul>
+          </div>
+          <div>
+            <h3 style="color:var(--primary);margin-bottom:0.5rem;">4. Billing & Invoicing</h3>
+            <ul style="color:var(--subtitle);font-size:1.05rem;">
+              <li>Service-wise charge setup (consultation, lab, surgery, room)</li>
+              <li>Insurance claim generation and tracking</li>
+              <li>Real-time billing updates (based on services used)</li>
+              <li>TPA integration (Third Party Administrators)</li>
+              <li>Refund processing</li>
+              <li>Discount and waiver management</li>
+              <li>Payment gateway integration (POS, online)</li>
+              <li>Tax and GST calculation</li>
+            </ul>
+          </div>
+          <div>
+            <h3 style="color:var(--primary);margin-bottom:0.5rem;">5. Pharmacy Management</h3>
+            <ul style="color:var(--subtitle);font-size:1.05rem;">
+              <li>Drug catalog (with dosage, form, stock)</li>
+              <li>Stock-in/stock-out entries</li>
+              <li>Batch & expiry tracking</li>
+              <li>Barcode scanning</li>
+              <li>Automatic low-stock alerts</li>
+              <li>Prescription-to-pharmacy flow</li>
+              <li>Billing from pharmacy counter</li>
+              <li>Vendor and purchase order management</li>
+              <li>Drug return and damage log</li>
+            </ul>
+          </div>
+          <div>
+            <h3 style="color:var(--primary);margin-bottom:0.5rem;">6. Laboratory Management</h3>
+            <ul style="color:var(--subtitle);font-size:1.05rem;">
+              <li>Lab test catalogue with categories (blood, urine, imaging)</li>
+              <li>Test order creation (manual and from doctor)</li>
+              <li>Sample collection tracking</li>
+              <li>Lab workflow: collected → processing → result ready</li>
+              <li>Report format templates</li>
+              <li>Result entry (with reference ranges)</li>
+              <li>Auto-flagging abnormal results</li>
+              <li>Digital report delivery to doctors/patients</li>
+              <li>Lab billing integration</li>
+              <li>Lab technician dashboards</li>
+            </ul>
+          </div>
+          <div>
+            <h3 style="color:var(--primary);margin-bottom:0.5rem;">7. Inventory/Asset Management</h3>
+            <ul style="color:var(--subtitle);font-size:1.05rem;">
+              <li>Master catalog of hospital items (equipment, consumables)</li>
+              <li>Stock level monitor (real-time)</li>
+              <li>Procurement module (purchase orders, vendor quotes)</li>
+              <li>Issue/return logs</li>
+              <li>Expiry tracking</li>
+              <li>Asset maintenance logs</li>
+              <li>Department-wise stock distribution</li>
+              <li>Usage audit</li>
+              <li>Alerts for low stock or expiring items</li>
+              <li>Barcode/QR code tagging</li>
+            </ul>
+          </div>
+          <div>
+            <h3 style="color:var(--primary);margin-bottom:0.5rem;">8. Room/Bed Management</h3>
+            <ul style="color:var(--subtitle);font-size:1.05rem;">
+              <li>Floor/ward/room type configuration</li>
+              <li>Real-time occupancy dashboard</li>
+              <li>Bed allotment and transfer system</li>
+              <li>Isolation/ICU room status</li>
+              <li>Bed cleaning & turnaround status</li>
+              <li>Automatic room charge calculation</li>
+              <li>Doctor/Nurse room assignments</li>
+              <li>Alerts for available beds</li>
+              <li>Gender-based/age-based allocation logic</li>
+              <li>Nursing dashboard for patient-wise actionable</li>
+            </ul>
+          </div>
+          <div>
+            <h3 style="color:var(--primary);margin-bottom:0.5rem;">9. Reports & Analytics</h3>
+            <ul style="color:var(--subtitle);font-size:1.05rem;">
+              <li>Daily OPD/IPD reports</li>
+              <li>Revenue breakdown (department-wise, doctor-wise)</li>
+              <li>Patient trends (age, disease, region)</li>
+              <li>Inventory consumption reports</li>
+              <li>Lab test volume reports</li>
+              <li>Bed occupancy ratio</li>
+              <li>Staff duty/time log reports</li>
+              <li>Billing summaries (cash, credit, insurance)</li>
+              <li>Compliance reports (HIPAA, NABH)</li>
+              <li>Custom report builder</li>
+            </ul>
+          </div>
+          <div>
+            <h3 style="color:var(--primary);margin-bottom:0.5rem;">10. Security & User Access</h3>
+            <ul style="color:var(--subtitle);font-size:1.05rem;">
+              <li>Role-based permission system (admin, doctor, nurse, etc.)</li>
+              <li>Two-factor authentication (2FA)</li>
+              <li>Password policy enforcement</li>
+              <li>Access logs (who accessed what and when)</li>
+              <li>Data encryption at rest and in transit</li>
+              <li>Audit trails for legal and compliance</li>
+              <li>Backup and disaster recovery module</li>
+              <li>Data export control (CSV, PDF access restrictions)</li>
+              <li>GDPR or HIPAA compliance settings</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    <p>© 2025 Hospital Management System | Designed for modern healthcare</p>
+  </footer>
+  <script src="sidenav.js"></script>
+</body>
+
+</html>
