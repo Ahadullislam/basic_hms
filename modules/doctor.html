@@ -173,101 +173,99 @@
       </div>
 
       <div class="hms-actions" style="margin-top:1rem;">
-        <button id="btnAddDocDemo" class="btn">Add Demo Doctor</button>
-        <button class="btn outline">Manage Schedules</button>
-        <button class="btn">Export Staff List</button>
+        <button id="btnAddDocDemo" class="btn" type="button">Add Demo Doctor</button>
+        <button class="btn outline" type="button">Manage Schedules</button>
+        <button class="btn" type="button">Export Staff List</button>
       </div>
     </section>
-  </main>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        // Doctor profile demo
+        const doctorForm = document.getElementById('doctorForm'); if (doctorForm) doctorForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          const f = e.target;
+          const name = f.name.value.trim() || 'Unnamed';
+          const spec = f.specialty.value.trim() || 'General';
+          const role = f.role.value;
+          const tbody = document.querySelector('#scheduleTable tbody');
+          // add a sample schedule row to indicate saved profile (demo)
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td style="padding:0.4rem">${name} (${role})</td><td style="padding:0.4rem">\u2014</td><td style="padding:0.4rem">\u2014</td>`;
+          tbody.appendChild(tr);
+          alert('Profile saved (demo): ' + name + ' \u2014 ' + spec);
+          f.reset();
+        });
 
-  <script>
-    // Doctor profile demo
-    document.getElementById('doctorForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const f = e.target;
-      const name = f.name.value.trim() || 'Unnamed';
-      const spec = f.specialty.value.trim() || 'General';
-      const role = f.role.value;
-      const tbody = document.querySelector('#scheduleTable tbody');
-      // add a sample schedule row to indicate saved profile (demo)
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td style="padding:0.4rem">${name} (${role})</td><td style="padding:0.4rem">—</td><td style="padding:0.4rem">—</td>`;
-      tbody.appendChild(tr);
-      alert('Profile saved (demo): ' + name + ' — ' + spec);
-      f.reset();
+        const exportStaffBtn = document.getElementById('exportStaff'); if (exportStaffBtn) exportStaffBtn.addEventListener('click', function () { alert('Exported staff list (demo).'); });
+
+        // Schedule demo
+        const scheduleForm = document.getElementById('scheduleForm'); if (scheduleForm) scheduleForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          const f = e.target;
+          const doc = f.docName.value || 'Unknown';
+          const date = f.date.value || '\u2014';
+          const from = f.from.value || '\u2014';
+          const to = f.to.value || '\u2014';
+          const tb = document.getElementById('scheduleTable').querySelector('tbody');
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td style="padding:0.4rem">${doc}</td><td style="padding:0.4rem">${date}</td><td style="padding:0.4rem">${from}-${to}</td>`;
+          tb.appendChild(tr);
+          f.reset();
+        });
+
+        // Shifts demo
+        const shiftForm = document.getElementById('shiftForm'); if (shiftForm) shiftForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          const f = e.target;
+          const name = f.shiftName.value || 'Shift';
+          const start = f.start.value || '00:00';
+          const end = f.end.value || '00:00';
+          const li = document.createElement('li');
+          li.textContent = `${name}: ${start}-${end}`;
+          document.getElementById('shiftList').appendChild(li);
+          f.reset();
+        });
+
+        // Signature preview
+        const sigFile = document.getElementById('sigFile'); if (sigFile) sigFile.addEventListener('change', function (e) {
+          const f = e.target.files[0];
+          const p = document.getElementById('sigPreview');
+          if (!f) { if (p) p.textContent = ''; return; }
+          if (p) p.textContent = `Selected: ${f.name} (${Math.round(f.size / 1024)} KB)`;
+        });
+
+        // Messaging demo
+        const msgForm = document.getElementById('msgForm'); if (msgForm) msgForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          const f = e.target;
+          const to = f.to.value || 'All';
+          const msg = f.message.value || '';
+          if (!msg.trim()) return alert('Please enter a message');
+          const ul = document.getElementById('messages');
+          const li = document.createElement('li');
+          li.innerHTML = `<strong>${to}</strong>: ${msg}`;
+          ul.appendChild(li);
+          f.reset();
+        });
+        const clearMsgsBtn = document.getElementById('clearMsgs'); if (clearMsgsBtn) clearMsgsBtn.addEventListener('click', function () { document.getElementById('messages').innerHTML = ''; });
+
+        // Quick demo add
+        const addDocDemoBtn = document.getElementById('btnAddDocDemo'); if (addDocDemoBtn) addDocDemoBtn.addEventListener('click', function () {
+          const tb = document.getElementById('scheduleTable').querySelector('tbody');
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td style="padding:0.4rem">Dr. Demo</td><td style="padding:0.4rem">2025-09-10</td><td style="padding:0.4rem">10:00-14:00</td>`;
+          tb.appendChild(tr);
+        });
+      });
+    </script>
     });
+    </script>
 
-    document.getElementById('exportStaff').addEventListener('click', function () {
-      alert('Exported staff list (demo).');
-    });
+    <footer class="hms-footer">
+      <p>© 2025 Hospital Management System | Doctor & Staff Module</p>
+    </footer>
 
-    // Schedule demo
-    document.getElementById('scheduleForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const f = e.target;
-      const doc = f.docName.value || 'Unknown';
-      const date = f.date.value || '—';
-      const from = f.from.value || '—';
-      const to = f.to.value || '—';
-      const tb = document.getElementById('scheduleTable').querySelector('tbody');
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td style="padding:0.4rem">${doc}</td><td style="padding:0.4rem">${date}</td><td style="padding:0.4rem">${from}-${to}</td>`;
-      tb.appendChild(tr);
-      f.reset();
-    });
-
-    // Shifts demo
-    document.getElementById('shiftForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const f = e.target;
-      const name = f.shiftName.value || 'Shift';
-      const start = f.start.value || '00:00';
-      const end = f.end.value || '00:00';
-      const li = document.createElement('li');
-      li.textContent = `${name}: ${start}-${end}`;
-      document.getElementById('shiftList').appendChild(li);
-      f.reset();
-    });
-
-    // Signature preview
-    document.getElementById('sigFile').addEventListener('change', function (e) {
-      const f = e.target.files[0];
-      const p = document.getElementById('sigPreview');
-      if (!f) { p.textContent = ''; return; }
-      p.textContent = `Selected: ${f.name} (${Math.round(f.size / 1024)} KB)`;
-    });
-
-    // Messaging demo
-    document.getElementById('msgForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const f = e.target;
-      const to = f.to.value || 'All';
-      const msg = f.message.value || '';
-      if (!msg.trim()) return alert('Please enter a message');
-      const ul = document.getElementById('messages');
-      const li = document.createElement('li');
-      li.innerHTML = `<strong>${to}</strong>: ${msg}`;
-      ul.appendChild(li);
-      f.reset();
-    });
-    document.getElementById('clearMsgs').addEventListener('click', function () {
-      document.getElementById('messages').innerHTML = '';
-    });
-
-    // Quick demo add
-    document.getElementById('btnAddDocDemo').addEventListener('click', function () {
-      const tb = document.getElementById('scheduleTable').querySelector('tbody');
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td style="padding:0.4rem">Dr. Demo</td><td style="padding:0.4rem">2025-09-10</td><td style="padding:0.4rem">10:00-14:00</td>`;
-      tb.appendChild(tr);
-    });
-  </script>
-
-  <footer class="hms-footer">
-    <p>© 2025 Hospital Management System | Doctor & Staff Module</p>
-  </footer>
-
-  <script src="../sidenav.js"></script>
+    <script src="../sidenav.js"></script>
 </body>
 
 </html>

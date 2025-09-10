@@ -176,8 +176,8 @@
                 </tbody>
               </table>
               <div style="margin-top:0.6rem;display:flex;gap:0.4rem;">
-                <button id="callNext" class="btn">Call Next</button>
-                <button id="addDemo" class="btn outline">Add Demo Patient</button>
+                <button id="callNext" class="btn" type="button">Call Next</button>
+                <button id="addDemo" class="btn outline" type="button">Add Demo Patient</button>
               </div>
             </div>
           </div>
@@ -201,64 +201,64 @@
   </main>
 
   <script>
-    // Simple MRN generator
-    function makeMrn() {
-      const prefix = 'MRN';
-      const now = Date.now().toString(36).toUpperCase();
-      const rand = Math.floor(Math.random() * 900 + 100);
-      return `${prefix}-${now}-${rand}`;
-    }
+    document.addEventListener('DOMContentLoaded', function () {
+      // Simple MRN generator
+      function makeMrn() {
+        const prefix = 'MRN';
+        const now = Date.now().toString(36).toUpperCase();
+        const rand = Math.floor(Math.random() * 900 + 100);
+        return `${prefix}-${now}-${rand}`;
+      }
 
-    document.getElementById('genMrn').addEventListener('click', function () {
-      document.getElementById('mrn').value = makeMrn();
-    });
+      const genMrnBtn = document.getElementById('genMrn'); if (genMrnBtn) genMrnBtn.addEventListener('click', function () {
+        const mrnEl = document.getElementById('mrn'); if (mrnEl) mrnEl.value = makeMrn();
+      });
 
-    // Registration handler: adds to queue demo
-    document.getElementById('regForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const form = e.target;
-      const name = (form.firstName.value || '') + ' ' + (form.lastName.value || '');
-      const q = document.getElementById('queueTable');
-      const next = q.children.length + 1;
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td style="padding:0.4rem">${next}</td><td style="padding:0.4rem">${name.trim() || 'Guest'}</td><td style="padding:0.4rem">Waiting</td>`;
-      q.appendChild(tr);
-      alert('Patient registered and added to queue (demo). MRN: ' + (form.mrn.value || '—'));
-      form.reset();
-      document.getElementById('mrn').value = '';
-    });
+      // Registration handler: adds to queue demo
+      const regForm = document.getElementById('regForm'); if (regForm) regForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const form = e.target;
+        const name = (form.firstName.value || '') + ' ' + (form.lastName.value || '');
+        const q = document.getElementById('queueTable');
+        const next = q.children.length + 1;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td style="padding:0.4rem">${next}</td><td style="padding:0.4rem">${name.trim() || 'Guest'}</td><td style="padding:0.4rem">Waiting</td>`;
+        q.appendChild(tr);
+        alert('Patient registered and added to queue (demo). MRN: ' + (form.mrn.value || '\u2014'));
+        form.reset();
+        const mrnEl = document.getElementById('mrn'); if (mrnEl) mrnEl.value = '';
+      });
 
-    // Appointment demo
-    document.getElementById('apptForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      alert('Appointment booked (demo).');
-      e.target.reset();
-    });
-    document.getElementById('sendReminder').addEventListener('click', function () {
-      alert('Reminder sent (demo).');
-    });
+      // Appointment demo
+      const apptForm = document.getElementById('apptForm'); if (apptForm) apptForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        alert('Appointment booked (demo).');
+        e.target.reset();
+      });
+      const sendReminderBtn = document.getElementById('sendReminder'); if (sendReminderBtn) sendReminderBtn.addEventListener('click', function () { alert('Reminder sent (demo).'); });
 
-    // Queue controls
-    document.getElementById('callNext').addEventListener('click', function () {
-      const q = document.getElementById('queueTable');
-      if (!q.firstElementChild) return alert('Queue empty');
-      q.firstElementChild.children[2].textContent = 'In Consultation';
-      alert('Calling: ' + q.firstElementChild.children[1].textContent);
-    });
-    document.getElementById('addDemo').addEventListener('click', function () {
-      const q = document.getElementById('queueTable');
-      const next = q.children.length + 1;
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td style="padding:0.4rem">${next}</td><td style="padding:0.4rem">Demo Patient ${next}</td><td style="padding:0.4rem">Waiting</td>`;
-      q.appendChild(tr);
-    });
+      // Queue controls
+      const callNextBtn = document.getElementById('callNext'); if (callNextBtn) callNextBtn.addEventListener('click', function () {
+        const q = document.getElementById('queueTable');
+        if (!q.firstElementChild) return alert('Queue empty');
+        q.firstElementChild.children[2].textContent = 'In Consultation';
+        alert('Calling: ' + q.firstElementChild.children[1].textContent);
+      });
+      const addDemoBtn = document.getElementById('addDemo'); if (addDemoBtn) addDemoBtn.addEventListener('click', function () {
+        const q = document.getElementById('queueTable');
+        const next = q.children.length + 1;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td style="padding:0.4rem">${next}</td><td style="padding:0.4rem">Demo Patient ${next}</td><td style="padding:0.4rem">Waiting</td>`;
+        q.appendChild(tr);
+      });
 
-    // Consent preview (filename only in demo)
-    document.getElementById('consentFile').addEventListener('change', function (e) {
-      const file = e.target.files[0];
-      const p = document.getElementById('consentPreview');
-      if (!file) { p.textContent = ''; return; }
-      p.textContent = `Selected: ${file.name} (${Math.round(file.size / 1024)} KB)`;
+      // Consent preview (filename only in demo)
+      const consentFile = document.getElementById('consentFile'); if (consentFile) consentFile.addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        const p = document.getElementById('consentPreview');
+        if (!file) { if (p) p.textContent = ''; return; }
+        if (p) p.textContent = `Selected: ${file.name} (${Math.round(file.size / 1024)} KB)`;
+      });
     });
   </script>
 

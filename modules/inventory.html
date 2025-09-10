@@ -37,24 +37,170 @@
 
   <main class="hms-main">
     <section class="hms-section">
-      <div class="hms-card">
-        <div class="hms-card-content">
-          <h2>Core Features</h2>
-          <ul>
-            <li>Master catalog and item classification</li>
-            <li>Real-time stock levels and alerts</li>
-            <li>Procurement: purchase orders & vendor quotes</li>
-            <li>Issue/return logs and department distribution</li>
-            <li>Expiry and maintenance schedules</li>
-            <li>Barcode/QR tagging and audits</li>
-          </ul>
-        </div>
-      </div>
+      <div class="hms-grid" style="gap:1rem; display:grid; grid-template-columns: 1fr 320px; align-items:start;">
+        <div>
+          <div class="hms-card">
+            <div class="hms-card-header">
+              <h2>Master Catalog</h2><small>Add and classify stock items</small>
+            </div>
+            <div class="hms-card-content">
+              <form id="itemForm" style="display:grid;grid-template-columns:1fr 120px;gap:.5rem;align-items:end">
+                <div>
+                  <label>Item Name</label>
+                  <input type="text" id="itemName" required>
+                </div>
+                <div>
+                  <label>Category</label>
+                  <input type="text" id="itemCategory" placeholder="e.g., Consumable, Equipment">
+                </div>
+                <div>
+                  <label>Unit</label>
+                  <input type="text" id="itemUnit" placeholder="e.g., pcs, box">
+                </div>
+                <div>
+                  <label>Min Stock</label>
+                  <input type="number" id="itemMin" value="5">
+                </div>
+                <div>
+                  <label>Initial Qty</label>
+                  <input type="number" id="itemQty" value="0">
+                </div>
+                <div>
+                  <label>Expiry (optional)</label>
+                  <input type="date" id="itemExpiry">
+                </div>
+                <div style="grid-column:1 / -1">
+                  <button class="btn" type="submit">Save Item</button>
+                  <button class="btn outline" type="button" id="btnSeedItems">Add Demo Items</button>
+                </div>
+              </form>
 
-      <div class="hms-actions" style="margin-top:1rem;">
-        <button class="btn">Add Item</button>
-        <button class="btn outline">Create Purchase Order</button>
-        <button class="btn">Run Inventory Audit</button>
+              <table class="hms-table" id="itemTable" style="margin-top:.8rem">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Cat</th>
+                    <th>Qty</th>
+                    <th>Min</th>
+                    <th>Expiry</th>
+                    <th>Barcode</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem">
+            <div class="hms-card-header">
+              <h3>Procurement (Purchase Orders)</h3><small>Create and receive POs</small>
+            </div>
+            <div class="hms-card-content">
+              <form id="poForm" style="display:grid;grid-template-columns:1fr 120px;gap:.5rem;align-items:end">
+                <div>
+                  <label>Vendor</label>
+                  <input id="poVendor" placeholder="Vendor name">
+                </div>
+                <div>
+                  <label>Item</label>
+                  <select id="poItem"></select>
+                </div>
+                <div>
+                  <label>Qty</label>
+                  <input type="number" id="poQty" value="1">
+                </div>
+                <div style="grid-column:1 / -1">
+                  <button class="btn" type="submit">Create PO</button>
+                </div>
+              </form>
+
+              <table class="hms-table" id="poTable" style="margin-top:.8rem">
+                <thead>
+                  <tr>
+                    <th>PO #</th>
+                    <th>Vendor</th>
+                    <th>Item</th>
+                    <th>Qty</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem">
+            <div class="hms-card-header">
+              <h3>Issue / Return Logs</h3><small>Distribute to departments and return items</small>
+            </div>
+            <div class="hms-card-content">
+              <form id="issueForm" style="display:grid;grid-template-columns:1fr 120px;gap:.5rem;align-items:end">
+                <div>
+                  <label>Department</label>
+                  <input id="issueDept" placeholder="e.g., ER, Lab">
+                </div>
+                <div>
+                  <label>Item</label>
+                  <select id="issueItem"></select>
+                </div>
+                <div>
+                  <label>Qty</label>
+                  <input type="number" id="issueQty" value="1">
+                </div>
+                <div style="grid-column:1 / -1">
+                  <button class="btn" type="submit">Issue</button>
+                </div>
+              </form>
+
+              <table class="hms-table" id="issueTable" style="margin-top:.8rem">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Dept</th>
+                    <th>Item</th>
+                    <th>Qty</th>
+                    <th>Type</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <aside>
+          <div class="hms-card">
+            <div class="hms-card-header">
+              <h3>Live Alerts</h3>
+            </div>
+            <div class="hms-card-content">
+              <div id="alerts"></div>
+              <hr>
+              <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+                <button class="btn outline" id="btnAudit" type="button">Run Inventory Audit</button>
+                <button class="btn" id="btnRunChecks" type="button">Recheck Alerts</button>
+                <button class="btn" id="btnClearDemo" type="button">Clear Demo Data</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem">
+            <div class="hms-card-header">
+              <h3>Barcode / Audit</h3>
+            </div>
+            <div class="hms-card-content">
+              <label>Scan / Enter Barcode</label>
+              <input id="scanInput" placeholder="paste barcode or id">
+              <div style="margin-top:.5rem">
+                <button class="btn" id="btnScan" type="button">Find Item</button>
+                <button class="btn outline" id="btnAuditRun" type="button">Run Quick Audit</button>
+              </div>
+              <div id="auditResult" style="margin-top:.6rem"></div>
+            </div>
+          </div>
+        </aside>
       </div>
     </section>
   </main>
@@ -63,6 +209,114 @@
     <p>© 2025 Hospital Management System | Inventory Module</p>
   </footer>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Inventory demo - persistent in localStorage
+      const LS_KEY = 'hms_inventory_v1';
+      let store = { items: [], pos: [], issues: [] };
+
+      function save() { localStorage.setItem(LS_KEY, JSON.stringify(store)); }
+      function load() { const raw = localStorage.getItem(LS_KEY); if (raw) store = JSON.parse(raw); }
+
+      function genBarcode(item) { return `BC-${item.id}-${item.name.replace(/\s+/g, '').slice(0, 6).toUpperCase()}`; }
+
+      function uid(prefix) { return prefix + Math.floor(Math.random() * 9000 + 1000); }
+
+      function renderItems() {
+        const tbody = document.querySelector('#itemTable tbody'); tbody.innerHTML = '';
+        const poSelect = document.getElementById('poItem'); const issueSelect = document.getElementById('issueItem');
+        [poSelect, issueSelect].forEach(s => s.innerHTML = '');
+        store.items.forEach(it => {
+          const tr = document.createElement('tr');
+          const exp = it.expiry || '-';
+          tr.innerHTML = `<td>${it.name}</td><td>${it.category}</td><td>${it.qty}</td><td>${it.min}</td><td>${exp}</td><td>${it.barcode}</td>`;
+          tbody.appendChild(tr);
+          const opt = document.createElement('option'); opt.value = it.id; opt.textContent = `${it.name}  ${it.qty} ${it.unit}`;
+          poSelect.appendChild(opt); issueSelect.appendChild(opt.cloneNode(true));
+        });
+        checkAlerts();
+      }
+
+      function renderPOs() {
+        const tbody = document.querySelector('#poTable tbody'); tbody.innerHTML = '';
+        store.pos.forEach(p => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${p.id}</td><td>${p.vendor}</td><td>${p.itemName}</td><td>${p.qty}</td><td>${p.status}</td><td><button data-id="${p.id}" class="btn small receive" type="button">Receive</button></td>`;
+          tbody.appendChild(tr);
+        });
+        // delegated handler will process receives
+      }
+
+      // delegated receive handler
+      const poTable = document.querySelector('#poTable tbody');
+      if (poTable) poTable.addEventListener('click', function (ev) {
+        const btn = ev.target.closest('.receive'); if (!btn) return; const id = btn.dataset.id; receivePO(id);
+      });
+
+      function renderIssues() {
+        const tbody = document.querySelector('#issueTable tbody'); tbody.innerHTML = '';
+        store.issues.forEach(i => {
+          const tr = document.createElement('tr'); tr.innerHTML = `<td>${i.id}</td><td>${i.dept}</td><td>${i.itemName}</td><td>${i.qty}</td><td>${i.type}</td><td>${new Date(i.date).toLocaleString()}</td>`;
+          tbody.appendChild(tr);
+        });
+      }
+
+      function checkAlerts() {
+        const out = document.getElementById('alerts'); out.innerHTML = '';
+        const now = new Date();
+        store.items.forEach(it => {
+          if (it.qty <= Number(it.min || 0)) {
+            const p = document.createElement('div'); p.textContent = `Low stock: ${it.name} (${it.qty} <= min ${it.min})`; p.style.color = 'crimson'; out.appendChild(p);
+          }
+          if (it.expiry) { const d = new Date(it.expiry); const days = Math.ceil((d - now) / (1000 * 60 * 60 * 24)); if (days <= 30) { const p = document.createElement('div'); p.textContent = `Expiry alert: ${it.name} expires in ${days} day(s)`; p.style.color = 'darkorange'; out.appendChild(p); } }
+        });
+      }
+
+      // Form handlers
+      const itemForm = document.getElementById('itemForm'); if (itemForm) itemForm.addEventListener('submit', function (e) { e.preventDefault(); const id = uid('I'); const name = document.getElementById('itemName').value; const cat = document.getElementById('itemCategory').value; const unit = document.getElementById('itemUnit').value || 'pcs'; const min = Number(document.getElementById('itemMin').value || 0); const qty = Number(document.getElementById('itemQty').value || 0); const exp = document.getElementById('itemExpiry').value || null; const item = { id, name, category: cat, unit, min, qty, expiry: exp }; item.barcode = genBarcode(item); store.items.push(item); save(); renderItems(); this.reset(); });
+
+      const poFormEl = document.getElementById('poForm'); if (poFormEl) poFormEl.addEventListener('submit', function (e) { e.preventDefault(); const id = uid('PO'); const vendor = document.getElementById('poVendor').value || 'Vendor'; const itemId = document.getElementById('poItem').value; const qty = Number(document.getElementById('poQty').value || 1); const it = store.items.find(x => x.id === itemId); const po = { id, vendor, itemId, itemName: it ? it.name : 'Unknown', qty, status: 'Created' }; store.pos.push(po); save(); renderPOs(); this.reset(); });
+
+      function receivePO(id) { const po = store.pos.find(p => p.id === id); if (!po) return alert('PO not found'); po.status = 'Received'; const it = store.items.find(x => x.id === po.itemId); if (it) it.qty += Number(po.qty); save(); renderItems(); renderPOs(); }
+
+      const issueFormEl = document.getElementById('issueForm'); if (issueFormEl) issueFormEl.addEventListener('submit', function (e) { e.preventDefault(); const id = uid('ISS'); const dept = document.getElementById('issueDept').value || 'Dept'; const itemId = document.getElementById('issueItem').value; const qty = Number(document.getElementById('issueQty').value || 1); const it = store.items.find(x => x.id === itemId); if (!it) return alert('Item not found'); if (it.qty < qty) return alert('Insufficient stock'); it.qty -= qty; const log = { id, dept, itemId, itemName: it.name, qty, type: 'Issue', date: new Date().toISOString() }; store.issues.push(log); save(); renderItems(); renderIssues(); this.reset(); });
+
+      const btnAudit = document.getElementById('btnAudit'); if (btnAudit) btnAudit.addEventListener('click', function () { runAudit(); });
+      const btnRunChecks = document.getElementById('btnRunChecks'); if (btnRunChecks) btnRunChecks.addEventListener('click', function () { checkAlerts(); });
+      const btnClearDemo = document.getElementById('btnClearDemo'); if (btnClearDemo) btnClearDemo.addEventListener('click', function () { if (confirm('Clear demo inventory data?')) { store = { items: [], pos: [], issues: [] }; save(); renderItems(); renderPOs(); renderIssues(); document.getElementById('alerts').innerHTML = ''; document.getElementById('auditResult').innerHTML = ''; } });
+
+      const btnSeedItems = document.getElementById('btnSeedItems'); if (btnSeedItems) btnSeedItems.addEventListener('click', function () { seedDemo(); });
+
+      const btnScan = document.getElementById('btnScan'); if (btnScan) btnScan.addEventListener('click', function () { const v = document.getElementById('scanInput').value.trim(); if (!v) return; const it = store.items.find(i => i.barcode === v || i.id === v); const out = document.getElementById('auditResult'); if (!it) out.innerHTML = '<div style="color:crimson">Not found</div>'; else out.innerHTML = `<div><strong>${it.name}</strong><div>Qty: ${it.qty}</div><div>Expiry: ${it.expiry || '-'}</div><div>Barcode: ${it.barcode}</div></div>`; });
+
+      const btnAuditRun = document.getElementById('btnAuditRun'); if (btnAuditRun) btnAuditRun.addEventListener('click', function () { runAudit(true); });
+
+      function runAudit(showToast) {
+        // simple audit: list items where barcode missing or qty negative
+        const problems = [];
+        store.items.forEach(i => { if (!i.barcode) problems.push(`${i.name} missing barcode`); if (i.qty < 0) problems.push(`${i.name} negative qty ${i.qty}`); });
+        const dom = document.getElementById('auditResult'); dom.innerHTML = '';
+        if (problems.length === 0) dom.innerHTML = '<div style="color:green">Audit OK  no problems found</div>';
+        else { problems.forEach(p => { const d = document.createElement('div'); d.style.color = 'crimson'; d.textContent = p; dom.appendChild(d); }); }
+        if (showToast) alert('Audit completed');
+      }
+
+      // seed demo
+      function seedDemo() {
+        store.items = []; store.pos = []; store.issues = [];
+        store.items.push({ id: 'I1001', name: 'Surgical Mask', category: 'Consumable', unit: 'box', min: 10, qty: 25, expiry: null });
+        store.items.push({ id: 'I1002', name: 'Disposable Syringe 5ml', category: 'Consumable', unit: 'pcs', min: 50, qty: 200, expiry: null });
+        store.items.push({ id: 'I1003', name: 'IV Fluid 500ml', category: 'Consumable', unit: 'bag', min: 20, qty: 18, expiry: new Date(Date.now() + 12 * 24 * 3600 * 1000).toISOString().slice(0, 10) });
+        store.items.forEach(i => i.barcode = genBarcode(i));
+        store.pos.push({ id: 'PO5001', vendor: 'MedSuppliers', itemId: 'I1003', itemName: 'IV Fluid 500ml', qty: 50, status: 'Created' });
+        store.issues.push({ id: 'ISS7001', dept: 'ER', itemId: 'I1001', itemName: 'Surgical Mask', qty: 5, type: 'Issue', date: new Date().toISOString() });
+        save(); renderItems(); renderPOs(); renderIssues(); checkAlerts();
+      }
+
+      // initialize
+      load(); if (!store.items || store.items.length === 0) seedDemo(); renderItems(); renderPOs(); renderIssues();
+    });
+  </script>
   <script src="../sidenav.js"></script>
 </body>
 

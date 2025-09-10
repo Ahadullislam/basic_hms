@@ -40,24 +40,286 @@
       <div class="hms-card">
         <div class="hms-card-content">
           <h2>Core Features</h2>
-          <ul>
-            <li>Drug catalog with dosage and forms</li>
-            <li>Batch & expiry tracking</li>
-            <li>Barcode scanning and POS billing</li>
-            <li>Low-stock alerts and reorder points</li>
-            <li>Prescription fulfillment workflow</li>
-            <li>Vendor & purchase order management</li>
-          </ul>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;">
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Drug Catalog</h3>
+              <p>Maintain drug list with dosage, form and reorder points.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Batch & Expiry</h3>
+              <p>Track batches with expiry dates and batch-level quantity.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Barcode & POS</h3>
+              <p>Scan barcodes or search to sell from POS; supports quick checkout.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Low-stock Alerts</h3>
+              <p>Automatic alerts when stock falls below reorder point.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Prescription Fulfillment</h3>
+              <p>Pick prescribed items and mark as dispensed.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Vendors & Purchase Orders</h3>
+              <p>Create POs and receive stock against them.</p>
+            </div>
+          </div>
         </div>
       </div>
 
+      <div style="display:grid;grid-template-columns:1fr 420px;gap:1.2rem;margin-top:1.2rem;align-items:start;">
+        <div>
+          <div class="hms-card">
+            <div class="hms-card-content">
+              <h3>Drug Catalog</h3>
+              <form id="drugForm" style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+                <input name="name" placeholder="Drug name" style="flex:1;padding:0.5rem;min-width:140px;" />
+                <input name="dosage" placeholder="Dosage (e.g. 500 mg)" style="padding:0.5rem;min-width:120px;" />
+                <input name="form" placeholder="Form (tablet/syrup)" style="padding:0.5rem;min-width:120px;" />
+                <input name="reorder" placeholder="Reorder qty" type="number" value="10"
+                  style="padding:0.5rem;min-width:100px;" />
+                <button class="btn" type="submit">Add Drug</button>
+              </form>
+              <table id="drugTable" style="width:100%;margin-top:0.6rem;border-collapse:collapse;">
+                <thead>
+                  <tr>
+                    <th style="text-align:left;padding:0.4rem">Drug</th>
+                    <th style="text-align:left;padding:0.4rem">Dosage</th>
+                    <th style="text-align:left;padding:0.4rem">Form</th>
+                    <th style="text-align:left;padding:0.4rem">Stock</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem;">
+            <div class="hms-card-content">
+              <h3>Batch / Stock Entry</h3>
+              <form id="batchForm" style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+                <select id="batchDrug" name="drug" style="padding:0.5rem;min-width:160px;"></select>
+                <input name="batch" placeholder="Batch ID" style="padding:0.5rem;min-width:120px;" />
+                <input name="exp" type="date" style="padding:0.5rem;" />
+                <input name="qty" type="number" value="0" style="padding:0.5rem;min-width:100px;" />
+                <button class="btn" type="submit">Add Batch</button>
+              </form>
+              <table id="batchTable" style="width:100%;margin-top:0.6rem;border-collapse:collapse;">
+                <thead>
+                  <tr>
+                    <th style="text-align:left;padding:0.4rem">Drug</th>
+                    <th style="text-align:left;padding:0.4rem">Batch</th>
+                    <th style="text-align:left;padding:0.4rem">Expiry</th>
+                    <th style="text-align:left;padding:0.4rem">Qty</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem;">
+            <div class="hms-card-content">
+              <h3>POS / Billing</h3>
+              <form id="posForm" style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+                <input id="barcodeInput" placeholder="Scan / enter barcode"
+                  style="padding:0.5rem;min-width:200px;flex:1;" />
+                <input id="posQty" type="number" value="1" min="1" style="padding:0.5rem;min-width:80px;" />
+                <button class="btn" type="button" id="addToCart">Add</button>
+              </form>
+              <table id="cartTable" style="width:100%;margin-top:0.6rem;border-collapse:collapse;">
+                <thead>
+                  <tr>
+                    <th style="text-align:left;padding:0.4rem">Item</th>
+                    <th style="text-align:left;padding:0.4rem">Qty</th>
+                    <th style="text-align:left;padding:0.4rem">Action</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+              <div style="margin-top:0.6rem;display:flex;gap:0.5rem;justify-content:flex-end;">
+                <button id="completeSale" class="btn" type="button">Complete Sale</button>
+                <button id="clearCart" class="btn outline" type="button">Clear</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside>
+          <div class="hms-card">
+            <div class="hms-card-content">
+              <h3>Low-stock Alerts</h3>
+              <div id="alerts" style="color:var(--danger);font-weight:600;margin-top:0.4rem;"></div>
+              <h3 style="margin-top:0.8rem;">Barcode Lookup</h3>
+              <input id="lookupCode" placeholder="Enter barcode to lookup" style="padding:0.5rem;width:100%;" />
+              <div id="lookupResult" style="margin-top:0.6rem;color:var(--subtitle);"></div>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem;">
+            <div class="hms-card-content">
+              <h3>Vendors & Purchase Orders</h3>
+              <form id="poForm" style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                <input name="vendor" placeholder="Vendor name" style="padding:0.5rem;min-width:160px;" />
+                <input name="poQty" type="number" placeholder="Qty" style="padding:0.5rem;min-width:100px;" />
+                <select id="poDrug" name="poDrug" style="padding:0.5rem;min-width:140px;"></select>
+                <button class="btn" type="submit">Create PO (receive)</button>
+              </form>
+              <div id="poList" style="margin-top:0.6rem;color:var(--subtitle);"></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
       <div class="hms-actions" style="margin-top:1rem;">
-        <button class="btn">Add Drug</button>
-        <button class="btn outline">Stock Entry</button>
-        <button class="btn">Scan Barcode</button>
+        <button id="btnAddDemo" class="btn" type="button">Add Demo Data</button>
+        <button class="btn outline" type="button">Stock Entry</button>
+        <button class="btn" type="button">Scan Barcode</button>
       </div>
     </section>
   </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Pharmacy demo data structures
+      const drugs = []; // {id, name, dosage, form, reorder, barcode}
+      const batches = []; // {drugId, batch, exp, qty}
+      const cart = []; // {drugId, qty}
+      const posCart = [];
+
+      function genBarcode(name) { return 'BC-' + name.replace(/\s+/g, '').toUpperCase().slice(0, 8) + '-' + Math.floor(Math.random() * 900 + 100); }
+
+      function refreshDrugList() {
+        const tbody = document.querySelector('#drugTable tbody'); tbody.innerHTML = '';
+        const sel = document.getElementById('batchDrug'); const poSel = document.getElementById('poDrug'); sel.innerHTML = ''; poSel.innerHTML = '';
+        drugs.forEach(d => {
+          const stock = batches.filter(b => b.drugId === d.id).reduce((s, b) => s + b.qty, 0);
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td style="padding:0.4rem">${d.name}</td><td style="padding:0.4rem">${d.dosage}</td><td style="padding:0.4rem">${d.form}</td><td style="padding:0.4rem">${stock}</td>`;
+          tbody.appendChild(tr);
+          const opt = document.createElement('option'); opt.value = d.id; opt.textContent = d.name; sel.appendChild(opt);
+          const opt2 = opt.cloneNode(true); poSel.appendChild(opt2);
+        });
+        refreshBatchList(); checkAlerts();
+        // update service select or barcode lookup if needed
+        const selB = document.getElementById('lookupCode'); if (selB) selB.value = '';
+      }
+
+      function refreshBatchList() {
+        const tbody = document.querySelector('#batchTable tbody'); tbody.innerHTML = '';
+        batches.forEach(b => {
+          const d = drugs.find(x => x.id === b.drugId) || { name: '?' };
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td style="padding:0.4rem">${d.name}</td><td style="padding:0.4rem">${b.batch}</td><td style="padding:0.4rem">${b.exp}</td><td style="padding:0.4rem">${b.qty}</td>`;
+          tbody.appendChild(tr);
+        });
+      }
+
+      function checkAlerts() {
+        const out = document.getElementById('alerts'); out.innerHTML = '';
+        drugs.forEach(d => {
+          const stock = batches.filter(b => b.drugId === d.id).reduce((s, b) => s + b.qty, 0);
+          if (stock <= (Number(d.reorder) || 0)) {
+            const p = document.createElement('div'); p.textContent = `${d.name} low stock: ${stock} (reorder ${d.reorder})`;
+            out.appendChild(p);
+          }
+        });
+      }
+
+      const drugForm = document.getElementById('drugForm');
+      if (drugForm) drugForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const f = e.target; const id = 'D' + (drugs.length + 1);
+        const name = f.name.value || 'Drug'; const dosage = f.dosage.value || '';
+        const form = f.form.value || '';
+        const reorder = Number(f.reorder.value) || 0;
+        const barcode = genBarcode(name);
+        drugs.push({ id, name, dosage, form, reorder, barcode });
+        refreshDrugList(); f.reset();
+      });
+
+      const batchForm = document.getElementById('batchForm');
+      if (batchForm) batchForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const f = e.target; const drugId = f.drug.value; const batch = f.batch.value || ('B' + Math.floor(Math.random() * 9000 + 1000)); const exp = f.exp.value || ''; const qty = Number(f.qty.value) || 0;
+        batches.push({ drugId, batch, exp, qty }); refreshDrugList(); f.reset();
+      });
+
+      // POS add to cart by barcode
+      const addBtn = document.getElementById('addToCart');
+      if (addBtn) addBtn.addEventListener('click', function () {
+        const code = document.getElementById('barcodeInput').value.trim(); const qty = Number(document.getElementById('posQty').value) || 1;
+        let found = drugs.find(d => d.barcode === code || d.name.toLowerCase() === code.toLowerCase());
+        if (!found) { alert('Item not found (demo).'); return; }
+        // reduce from first available batch
+        const batch = batches.find(b => b.drugId === found.id && b.qty > 0);
+        if (!batch) { alert('Out of stock (demo).'); return; }
+        // decrement batch qty
+        batch.qty -= qty; if (batch.qty < 0) batch.qty = 0;
+        const tb = document.querySelector('#cartTable tbody');
+        const tr = document.createElement('tr'); tr.innerHTML = `<td style="padding:0.4rem">${found.name}</td><td style="padding:0.4rem">${qty}</td><td style="padding:0.4rem"><button class="btn outline remove-btn" type="button">Remove</button></td>`;
+        tb.appendChild(tr);
+        refreshDrugList(); document.getElementById('barcodeInput').value = '';
+      });
+
+      // delegated remove handler for cart
+      const cartTbody = document.querySelector('#cartTable tbody');
+      if (cartTbody) cartTbody.addEventListener('click', function (ev) {
+        const btn = ev.target.closest('.remove-btn'); if (btn) {
+          const row = btn.closest('tr'); if (row) row.remove();
+        }
+      });
+
+      const completeBtn = document.getElementById('completeSale');
+      if (completeBtn) completeBtn.addEventListener('click', function () {
+        const tb = document.querySelector('#cartTable tbody'); if (tb.children.length === 0) return alert('Cart empty');
+        alert('Sale completed (demo).'); tb.innerHTML = '';
+        refreshDrugList();
+      });
+
+      const clearBtn = document.getElementById('clearCart');
+      if (clearBtn) clearBtn.addEventListener('click', function () { const t = document.querySelector('#cartTable tbody'); if (t) t.innerHTML = ''; });
+
+      const lookup = document.getElementById('lookupCode');
+      if (lookup) lookup.addEventListener('change', function (e) {
+        const code = e.target.value.trim(); const out = document.getElementById('lookupResult'); out.textContent = '';
+        const found = drugs.find(d => d.barcode === code || d.name.toLowerCase() === code.toLowerCase());
+        if (found) {
+          const stock = batches.filter(b => b.drugId === found.id).reduce((s, b) => s + b.qty, 0);
+          out.textContent = `${found.name} (${found.dosage}, ${found.form}) — Stock: ${stock} — Barcode: ${found.barcode}`;
+        } else out.textContent = 'Not found';
+      });
+
+      const poFormEl = document.getElementById('poForm');
+      if (poFormEl) poFormEl.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const f = e.target; const vendor = f.vendor.value || 'Vendor'; const qty = Number(f.poQty.value) || 0; const drugId = f.poDrug.value;
+        const poId = 'PO-' + Math.floor(Math.random() * 90000 + 1000);
+        batches.push({ drugId, batch: poId, exp: '', qty });
+        const out = document.getElementById('poList');
+        const d = drugs.find(x => x.id === drugId) || { name: '?' };
+        const div = document.createElement('div'); div.textContent = `${poId}: ${d.name} x ${qty} from ${vendor}`; out.appendChild(div);
+        refreshDrugList(); f.reset();
+      });
+
+      const demoBtn = document.getElementById('btnAddDemo');
+      if (demoBtn) demoBtn.addEventListener('click', function () {
+        // sample drugs and batches
+        drugs.length = 0; batches.length = 0;
+        drugs.push({ id: 'D1', name: 'Paracetamol', dosage: '500 mg', form: 'Tablet', reorder: 10, barcode: genBarcode('Paracetamol') });
+        drugs.push({ id: 'D2', name: 'Amoxicillin', dosage: '250 mg', form: 'Capsule', reorder: 5, barcode: genBarcode('Amoxicillin') });
+        batches.push({ drugId: 'D1', batch: 'B1001', exp: '2026-01-01', qty: 50 });
+        batches.push({ drugId: 'D1', batch: 'B1002', exp: '2025-07-01', qty: 5 });
+        batches.push({ drugId: 'D2', batch: 'A2001', exp: '2025-12-01', qty: 3 });
+        refreshDrugList();
+      });
+
+      // initialize with demo data
+      const initBtn = document.getElementById('btnAddDemo'); if (initBtn) initBtn.click();
+    });
+  </script>
 
   <footer class="hms-footer">
     <p>© 2025 Hospital Management System | Pharmacy Module</p>

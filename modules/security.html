@@ -37,24 +37,73 @@
 
   <main class="hms-main">
     <section class="hms-section">
-      <div class="hms-card">
-        <div class="hms-card-content">
-          <h2>Core Features</h2>
-          <ul>
-            <li>Role-based permissions and RBAC</li>
-            <li>Two-factor authentication (2FA)</li>
-            <li>Password policy enforcement and resets</li>
-            <li>Access logs and audit trails</li>
-            <li>Data encryption guidance and backup</li>
-            <li>Compliance settings for GDPR/HIPAA</li>
-          </ul>
-        </div>
-      </div>
+      <div class="hms-grid" style="display:grid;grid-template-columns:1fr 360px;gap:1rem;align-items:start">
+        <div>
+          <div class="hms-card">
+            <div class="hms-card-header">
+              <h2>RBAC - Roles & Permissions</h2>
+            </div>
+            <div class="hms-card-content">
+              <form id="roleForm" style="display:flex;gap:.5rem">
+                <input id="roleName" placeholder="Role name (e.g., Doctor)" required>
+                <button type="submit" class="btn">Add Role</button>
+              </form>
+              <div id="roleList" style="margin-top:.6rem"></div>
+            </div>
+          </div>
 
-      <div class="hms-actions" style="margin-top:1rem;">
-        <button class="btn">Manage Roles</button>
-        <button class="btn outline">View Audit Logs</button>
-        <button class="btn">Configure 2FA</button>
+          <div class="hms-card" style="margin-top:1rem">
+            <div class="hms-card-header">
+              <h3>Users & 2FA</h3>
+            </div>
+            <div class="hms-card-content">
+              <form id="userForm" style="display:grid;grid-template-columns:1fr 160px;gap:.5rem;align-items:end">
+                <input id="userName" placeholder="User name">
+                <select id="userRole"></select>
+                <input id="userPhone" placeholder="Phone number for 2FA">
+                <div style="grid-column:1 / -1;"><button type="submit" class="btn">Create User</button></div>
+              </form>
+              <div id="userList" style="margin-top:.6rem"></div>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem">
+            <div class="hms-card-header">
+              <h3>Password Policy</h3>
+            </div>
+            <div class="hms-card-content">
+              <label>Policy (min 8 chars, upper, number)</label>
+              <input id="pwdSample" placeholder="Enter sample password to check">
+              <button type="button" class="btn" id="btnCheckPwd">Check</button>
+              <div id="pwdResult" style="margin-top:.5rem"></div>
+            </div>
+          </div>
+        </div>
+
+        <aside>
+          <div class="hms-card">
+            <div class="hms-card-header">
+              <h3>Audit Logs</h3>
+            </div>
+            <div class="hms-card-content">
+              <div id="logs" style="max-height:220px;overflow:auto"></div>
+              <div style="margin-top:.6rem;display:flex;gap:.5rem"><button type="button" class="btn"
+                  id="btnClearLogs">Clear Logs</button><button type="button" class="btn outline"
+                  id="btnExportLogs">Export Logs</button></div>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem">
+            <div class="hms-card-header">
+              <h3>Compliance & Backup</h3>
+            </div>
+            <div class="hms-card-content">
+              <p>Guidance: Use TLS for transport, AES-256 for data at rest, regular encrypted backups, and role-based
+                least privilege.</p>
+              <button type="button" class="btn" id="btnBackup">Create Backup (download)</button>
+            </div>
+          </div>
+        </aside>
       </div>
     </section>
   </main>
@@ -62,6 +111,48 @@
   <footer class="hms-footer">
     <p>© 2025 Hospital Management System | Security & User Access Module</p>
   </footer>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Security demo: RBAC, 2FA simulation, password policy, audit logs
+      const LS = 'hms_security_v1';
+      let secure = { roles: [], users: [], logs: [] };
+
+      function save() { localStorage.setItem(LS, JSON.stringify(secure)); }
+      function load() { const r = localStorage.getItem(LS); if (r) secure = JSON.parse(r); }
+
+      function log(msg) { secure.logs.unshift({ t: new Date().toISOString(), msg }); save(); renderLogs(); }
+
+      function renderRoles() { const dom = document.getElementById('roleList'); if (!dom) return; dom.innerHTML = ''; secure.roles.forEach(r => { const d = document.createElement('div'); d.textContent = r; dom.appendChild(d); }); const sel = document.getElementById('userRole'); if (sel) { sel.innerHTML = ''; secure.roles.forEach(r => { const o = document.createElement('option'); o.value = r; o.textContent = r; sel.appendChild(o); }); } }
+
+      function renderUsers() { const dom = document.getElementById('userList'); if (!dom) return; dom.innerHTML = ''; secure.users.forEach(u => { const d = document.createElement('div'); d.innerHTML = `<strong>${u.name}</strong> — ${u.role} — 2FA:${u.twofa ? 'On' : 'Off'} <button data-user="${u.name}" class="btn small send2fa">Send 2FA</button>`; dom.appendChild(d); }); }
+
+      function renderLogs() { const dom = document.getElementById('logs'); if (!dom) return; dom.innerHTML = ''; secure.logs.slice(0, 200).forEach(l => { const d = document.createElement('div'); d.textContent = `${new Date(l.t).toLocaleString()} — ${l.msg}`; dom.appendChild(d); }); }
+
+      document.getElementById('roleForm').addEventListener('submit', function (e) { e.preventDefault(); const name = document.getElementById('roleName').value.trim(); if (!name) return; if (secure.roles.includes(name)) return alert('Role exists'); secure.roles.push(name); save(); renderRoles(); this.reset(); log(`Role created: ${name}`); });
+
+      document.getElementById('userForm').addEventListener('submit', function (e) { e.preventDefault(); const name = document.getElementById('userName').value || ('user' + Date.now()); const role = document.getElementById('userRole').value || 'User'; const phone = document.getElementById('userPhone').value || ''; const user = { name, role, phone, twofa: !!phone }; secure.users.push(user); save(); renderUsers(); this.reset(); log(`User created: ${name} (${role})`); });
+
+      document.getElementById('btnCheckPwd').addEventListener('click', function () { const p = document.getElementById('pwdSample').value || ''; const res = checkPassword(p); const d = document.getElementById('pwdResult'); d.innerHTML = `<div>${res.ok ? '<span style="color:green">Pass</span>' : '<span style="color:red">Fail</span>'} — ${res.msg.join(', ')}</div>`; if (!res.ok) log('Password policy violation: ' + res.msg.join('; ')); else log('Password policy check passed'); });
+
+      function checkPassword(p) { const msgs = []; if (p.length < 8) msgs.push('min 8 chars'); if (!/[A-Z]/.test(p)) msgs.push('upper-case required'); if (!/[0-9]/.test(p)) msgs.push('number required'); if (!/[^A-Za-z0-9]/.test(p)) msgs.push('symbol recommended'); return { ok: msgs.length === 0, msg: msgs }; }
+
+      function send2fa(name) {
+        const u = secure.users.find(x => x.name === name); if (!u) return alert('User not found'); const code = Math.floor(100000 + Math.random() * 900000); // simulate
+        log(`2FA code ${code} sent to ${u.phone || '—'}`); alert(`Simulated 2FA for ${u.name}: ${code}`);
+      }
+
+      // Event delegation for send2fa buttons inside userList
+      document.getElementById('userList').addEventListener('click', function (e) { if (e.target && e.target.classList.contains('send2fa')) { const name = e.target.dataset.user; send2fa(name); } });
+
+      document.getElementById('btnClearLogs').addEventListener('click', function () { if (confirm('Clear logs?')) { secure.logs = []; save(); renderLogs(); } });
+      document.getElementById('btnExportLogs').addEventListener('click', function () { const header = 'timestamp,message\n'; const csv = header + secure.logs.map(l => `"${l.t}","${l.msg.replace(/"/g, '""')}"`).join('\n'); const blob = new Blob([csv], { type: 'text/csv' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'audit_logs.csv'; a.click(); URL.revokeObjectURL(url); });
+
+      document.getElementById('btnBackup').addEventListener('click', function () { const data = JSON.stringify(secure); const blob = new Blob([data], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'hms_security_backup.json'; a.click(); URL.revokeObjectURL(url); log('Backup exported'); });
+
+      load(); if (!secure.roles || secure.roles.length === 0) { secure.roles = ['Admin', 'Doctor', 'Nurse', 'Pharmacist', 'LabTech']; secure.users = [{ name: 'admin', role: 'Admin', phone: '', twofa: false }]; secure.logs = [{ t: new Date().toISOString(), msg: 'Security module initialized' }]; save(); }
+      renderRoles(); renderUsers(); renderLogs();
+    });
+  </script>
   <script src="../sidenav.js"></script>
 </body>
 

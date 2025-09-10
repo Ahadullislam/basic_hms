@@ -127,8 +127,8 @@
               </div>
 
               <div style="margin-top:0.6rem;display:flex;gap:0.5rem;justify-content:flex-end;">
-                <button id="markPaid" class="btn">Mark Paid</button>
-                <button id="printInvoice" class="btn outline">Print / Share</button>
+                <button id="markPaid" class="btn" type="button">Mark Paid</button>
+                <button id="printInvoice" class="btn outline" type="button">Print / Share</button>
               </div>
             </div>
           </div>
@@ -162,106 +162,112 @@
       </div>
 
       <div class="hms-actions" style="margin-top:1rem;">
-        <button id="btnCreateInvoice" class="btn">Create Invoice (save)</button>
-        <button id="btnRefund" class="btn outline">Process Refund</button>
-        <button class="btn">Generate Report</button>
+        <button id="btnCreateInvoice" class="btn" type="button">Create Invoice (save)</button>
+        <button id="btnRefund" class="btn outline" type="button">Process Refund</button>
+        <button class="btn" type="button">Generate Report</button>
       </div>
     </section>
   </main>
 
   <script>
-    // Simple client-side demo billing
-    const services = [];
-    const GST_RATE = 0.18;
+    document.addEventListener('DOMContentLoaded', function () {
+      // Simple client-side demo billing
+      const services = [];
+      const GST_RATE = 0.18;
 
-    function format(n) { return Number(n).toFixed(2); }
+      function format(n) { return Number(n).toFixed(2); }
 
-    function refreshServiceList() {
-      const tbody = document.querySelector('#serviceTable tbody'); tbody.innerHTML = '';
-      const sel = document.getElementById('serviceSelect'); sel.innerHTML = '';
-      services.forEach((s, i) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td style="padding:0.4rem">${s.name}</td><td style="padding:0.4rem">${format(s.price)}</td><td style="padding:0.4rem">${s.gst ? 'Yes' : 'No'}</td>`;
-        tbody.appendChild(tr);
-        const opt = document.createElement('option'); opt.value = i; opt.textContent = `${s.name} — ${format(s.price)}`;
-        sel.appendChild(opt);
+      function refreshServiceList() {
+        const tbody = document.querySelector('#serviceTable tbody'); tbody.innerHTML = '';
+        const sel = document.getElementById('serviceSelect'); sel.innerHTML = '';
+        services.forEach((s, i) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td style="padding:0.4rem">${s.name}</td><td style="padding:0.4rem">${format(s.price)}</td><td style="padding:0.4rem">${s.gst ? 'Yes' : 'No'}</td>`;
+          tbody.appendChild(tr);
+          const opt = document.createElement('option'); opt.value = i; opt.textContent = `${s.name}  ${format(s.price)}`;
+          sel.appendChild(opt);
+        });
+      }
+
+      const serviceFormEl = document.getElementById('serviceForm');
+      if (serviceFormEl) serviceFormEl.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const f = e.target; const name = f.svcName.value.trim() || 'Service';
+        const price = parseFloat(f.svcPrice.value) || 0;
+        const gst = !!f.svcGst.checked;
+        services.push({ name, price, gst });
+        refreshServiceList();
+        f.reset();
       });
-    }
 
-    document.getElementById('serviceForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const f = e.target; const name = f.svcName.value.trim() || 'Service';
-      const price = parseFloat(f.svcPrice.value) || 0;
-      const gst = !!f.svcGst.checked;
-      services.push({ name, price, gst });
+      const invoice = [];
+
+      function recalc() {
+        let subtotal = 0, gstTotal = 0, discountTotal = 0;
+        const tbody = document.querySelector('#invoiceTable tbody'); tbody.innerHTML = '';
+        invoice.forEach(line => {
+          const price = line.price * line.qty;
+          let gst = 0;
+          if (line.gst) gst = price * GST_RATE;
+          let discount = 0;
+          if (line.disc) discount = price * (line.disc / 100);
+          const lineTotal = price + gst - discount;
+          subtotal += price;
+          gstTotal += gst;
+          discountTotal += discount;
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td style="padding:0.4rem">${line.name}</td><td style="padding:0.4rem">${line.qty}</td><td style="padding:0.4rem">${format(line.price)}</td><td style="padding:0.4rem">${format(gst)}</td><td style="padding:0.4rem">${format(lineTotal)}</td>`;
+          tbody.appendChild(tr);
+        });
+        document.getElementById('subtotal').textContent = format(subtotal);
+        document.getElementById('gstTotal').textContent = format(gstTotal);
+        document.getElementById('discountTotal').textContent = format(discountTotal);
+        document.getElementById('grandTotal').textContent = format(subtotal + gstTotal - discountTotal);
+      }
+
+      const lineForm = document.getElementById('lineForm');
+      if (lineForm) lineForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const f = e.target; const idx = Number(f.service.value); const qty = Number(f.qty.value) || 1; const disc = Number(f.disc.value) || 0;
+        const svc = services[idx]; if (!svc) return alert('Please add a service first');
+        invoice.push({ name: svc.name, price: svc.price, gst: svc.gst, qty, disc });
+        recalc(); f.reset();
+      });
+
+      const insFormEl = document.getElementById('insForm');
+      if (insFormEl) insFormEl.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const f = e.target; const provider = f.provider.value || 'Provider'; const coverage = Number(f.coverage.value) || 0;
+        // Apply coverage to grand total (simple demo)
+        const total = Number(document.getElementById('grandTotal').textContent) || 0;
+        const covered = total * (coverage / 100);
+        document.getElementById('insStatus').textContent = `${provider} will cover ${coverage}% (${format(covered)}). Patient pays ${format(total - covered)}.`;
+      });
+
+      const markPaidBtn = document.getElementById('markPaid');
+      if (markPaidBtn) markPaidBtn.addEventListener('click', function () { alert('Invoice marked paid (demo).'); });
+
+      const payCashBtn = document.getElementById('payCash');
+      if (payCashBtn) payCashBtn.addEventListener('click', () => alert('Processed cash payment (demo).'));
+      const payCardBtn = document.getElementById('payCard');
+      if (payCardBtn) payCardBtn.addEventListener('click', () => alert('Processed card payment (demo).'));
+
+      const printInvoiceBtn = document.getElementById('printInvoice');
+      if (printInvoiceBtn) printInvoiceBtn.addEventListener('click', function () {
+        const html = `<!doctype html><html><head><meta charset="utf-8"><title>Invoice</title><link href="../style.css" rel="stylesheet"></head><body><h2>Invoice (Demo)</h2>` +
+          document.querySelector('#invoiceTable').outerHTML + `<p>Subtotal: ${document.getElementById('subtotal').textContent}</p><p>GST: ${document.getElementById('gstTotal').textContent}</p><p>Total: ${document.getElementById('grandTotal').textContent}</p></body></html>`;
+        const w = window.open('', '_blank'); w.document.write(html); w.document.close(); w.print();
+      });
+
+      const btnRefundEl = document.getElementById('btnRefund');
+      if (btnRefundEl) btnRefundEl.addEventListener('click', function () { alert('Processed refund (demo).'); });
+
+      // small initial data
+      services.push({ name: 'Consultation', price: 200, gst: true });
+      services.push({ name: 'CBC Test', price: 450, gst: true });
+      services.push({ name: 'X-Ray', price: 800, gst: true });
       refreshServiceList();
-      f.reset();
     });
-
-    const invoice = [];
-
-    function recalc() {
-      let subtotal = 0, gstTotal = 0, discountTotal = 0;
-      const tbody = document.querySelector('#invoiceTable tbody'); tbody.innerHTML = '';
-      invoice.forEach(line => {
-        const price = line.price * line.qty;
-        let gst = 0;
-        if (line.gst) gst = price * GST_RATE;
-        let discount = 0;
-        if (line.disc) discount = price * (line.disc / 100);
-        const lineTotal = price + gst - discount;
-        subtotal += price;
-        gstTotal += gst;
-        discountTotal += discount;
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td style="padding:0.4rem">${line.name}</td><td style="padding:0.4rem">${line.qty}</td><td style="padding:0.4rem">${format(line.price)}</td><td style="padding:0.4rem">${format(gst)}</td><td style="padding:0.4rem">${format(lineTotal)}</td>`;
-        tbody.appendChild(tr);
-      });
-      document.getElementById('subtotal').textContent = format(subtotal);
-      document.getElementById('gstTotal').textContent = format(gstTotal);
-      document.getElementById('discountTotal').textContent = format(discountTotal);
-      document.getElementById('grandTotal').textContent = format(subtotal + gstTotal - discountTotal);
-    }
-
-    document.getElementById('lineForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const f = e.target; const idx = Number(f.service.value); const qty = Number(f.qty.value) || 1; const disc = Number(f.disc.value) || 0;
-      const svc = services[idx]; if (!svc) return alert('Please add a service first');
-      invoice.push({ name: svc.name, price: svc.price, gst: svc.gst, qty, disc });
-      recalc(); f.reset();
-    });
-
-    document.getElementById('insForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const f = e.target; const provider = f.provider.value || 'Provider'; const coverage = Number(f.coverage.value) || 0;
-      // Apply coverage to grand total (simple demo)
-      const total = Number(document.getElementById('grandTotal').textContent) || 0;
-      const covered = total * (coverage / 100);
-      document.getElementById('insStatus').textContent = `${provider} will cover ${coverage}% (${format(covered)}). Patient pays ${format(total - covered)}.`;
-    });
-
-    document.getElementById('markPaid').addEventListener('click', function () {
-      alert('Invoice marked paid (demo).');
-    });
-
-    document.getElementById('payCash').addEventListener('click', () => alert('Processed cash payment (demo).'));
-    document.getElementById('payCard').addEventListener('click', () => alert('Processed card payment (demo).'));
-
-    document.getElementById('printInvoice').addEventListener('click', function () {
-      const html = `<!doctype html><html><head><meta charset="utf-8"><title>Invoice</title><link href="../style.css" rel="stylesheet"></head><body><h2>Invoice (Demo)</h2>` +
-        document.querySelector('#invoiceTable').outerHTML + `<p>Subtotal: ${document.getElementById('subtotal').textContent}</p><p>GST: ${document.getElementById('gstTotal').textContent}</p><p>Total: ${document.getElementById('grandTotal').textContent}</p></body></html>`;
-      const w = window.open('', '_blank'); w.document.write(html); w.document.close(); w.print();
-    });
-
-    document.getElementById('btnRefund').addEventListener('click', function () {
-      alert('Processed refund (demo).');
-    });
-
-    // small initial data
-    services.push({ name: 'Consultation', price: 200, gst: true });
-    services.push({ name: 'CBC Test', price: 450, gst: true });
-    services.push({ name: 'X-Ray', price: 800, gst: true });
-    refreshServiceList();
   </script>
 
   <footer class="hms-footer">

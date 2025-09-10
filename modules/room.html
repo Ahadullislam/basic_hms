@@ -37,24 +37,128 @@
 
   <main class="hms-main">
     <section class="hms-section">
-      <div class="hms-card">
-        <div class="hms-card-content">
-          <h2>Core Features</h2>
-          <ul>
-            <li>Floor, ward and room type configuration</li>
-            <li>Real-time occupancy dashboard</li>
-            <li>Bed allotment and transfer workflows</li>
-            <li>ICU/Isolation status and alerts</li>
-            <li>Cleaning and turnaround tracking</li>
-            <li>Automatic room charge calculation</li>
-          </ul>
-        </div>
-      </div>
+      <div class="hms-grid" style="display:grid;grid-template-columns:1fr 360px;gap:1rem;align-items:start">
+        <div>
+          <div class="hms-card">
+            <div class="hms-card-header">
+              <h2>Configuration</h2><small>Floors, wards and room types</small>
+            </div>
+            <div class="hms-card-content">
+              <form id="confForm" style="display:grid;grid-template-columns:1fr 140px;gap:.5rem;align-items:end">
+                <div>
+                  <label>Floor</label>
+                  <input id="confFloor" placeholder="e.g., 1st Floor">
+                </div>
+                <div>
+                  <label>Ward</label>
+                  <input id="confWard" placeholder="e.g., Male Ward">
+                </div>
+                <div>
+                  <label>Room Type</label>
+                  <input id="confType" placeholder="e.g., General, Private, ICU">
+                </div>
+                <div>
+                  <label>Beds</label>
+                  <input type="number" id="confBeds" value="1">
+                </div>
+                <div style="grid-column:1 / -1">
+                  <button class="btn" id="btnAddRoom" type="button">Add Room</button>
+                  <button class="btn outline" id="btnSeedRooms" type="button">Seed Demo</button>
+                </div>
+              </form>
 
-      <div class="hms-actions" style="margin-top:1rem;">
-        <button class="btn">Allocate Bed</button>
-        <button class="btn outline">Transfer Patient</button>
-        <button class="btn">View Occupancy</button>
+              <table class="hms-table" id="roomsTable" style="margin-top:.6rem">
+                <thead>
+                  <tr>
+                    <th>Room</th>
+                    <th>Floor</th>
+                    <th>Ward</th>
+                    <th>Type</th>
+                    <th>Beds</th>
+                    <th>Occupancy</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem">
+            <div class="hms-card-header">
+              <h3>Bed Allotment & Transfers</h3>
+            </div>
+            <div class="hms-card-content">
+              <form id="allotForm" style="display:grid;grid-template-columns:1fr 140px;gap:.5rem;align-items:end">
+                <div>
+                  <label>Patient Name</label>
+                  <input id="patName">
+                </div>
+                <div>
+                  <label>Room</label>
+                  <select id="allotRoom"></select>
+                </div>
+                <div>
+                  <label>Bed #</label>
+                  <input type="number" id="allotBed" value="1">
+                </div>
+                <div style="grid-column:1 / -1">
+                  <button class="btn" id="btnAllot" type="button">Allot Bed</button>
+                  <button class="btn outline" id="btnTransfer" type="button">Transfer Patient</button>
+                </div>
+              </form>
+
+              <table class="hms-table" id="allocTable" style="margin-top:.6rem">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Patient</th>
+                    <th>Room</th>
+                    <th>Bed</th>
+                    <th>Since</th>
+                    <th>Charge/hr</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <aside>
+          <div class="hms-card">
+            <div class="hms-card-header">
+              <h3>Occupancy Dashboard</h3>
+            </div>
+            <div class="hms-card-content">
+              <div id="dashboard"></div>
+              <hr>
+              <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+                <button class="btn" id="btnRefresh" type="button">Refresh</button>
+                <button class="btn outline" id="btnCleaning" type="button">Mark Cleaned</button>
+                <button class="btn" id="btnClearRoomDemo" type="button">Clear Demo</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem">
+            <div class="hms-card-header">
+              <h3>ICU / Isolation</h3>
+            </div>
+            <div class="hms-card-content">
+              <label><input type="checkbox" id="filterICU"> Show only ICU/Isolation occupied</label>
+              <div id="icuAlerts" style="margin-top:.6rem"></div>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem">
+            <div class="hms-card-header">
+              <h3>Cleaning / Turnaround</h3>
+            </div>
+            <div class="hms-card-content">
+              <div id="cleanList"></div>
+            </div>
+          </div>
+        </aside>
       </div>
     </section>
   </main>
@@ -63,6 +167,67 @@
     <p>© 2025 Hospital Management System | Room/Bed Module</p>
   </footer>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Room/Bed management demo
+      const LS = 'hms_rooms_v1';
+      let state = { rooms: [], allocations: [], cleaning: [] };
+
+      function save() { localStorage.setItem(LS, JSON.stringify(state)); }
+      function load() { const r = localStorage.getItem(LS); if (r) state = JSON.parse(r); }
+
+      function uid(prefix) { return prefix + Math.floor(Math.random() * 9000 + 1000); }
+
+      function renderRooms() {
+        const tbody = document.querySelector('#roomsTable tbody'); if (tbody) tbody.innerHTML = '';
+        const sel = document.getElementById('allotRoom'); if (sel) sel.innerHTML = '';
+        state.rooms.forEach(r => {
+          const occ = state.allocations.filter(a => a.roomId === r.id).length + '/' + r.beds;
+          const tr = document.createElement('tr'); tr.innerHTML = `<td>${r.name}</td><td>${r.floor}</td><td>${r.ward}</td><td>${r.type}</td><td>${r.beds}</td><td>${occ}</td>`; if (tbody) tbody.appendChild(tr);
+          const opt = document.createElement('option'); opt.value = r.id; opt.textContent = `${r.name} (${r.type}) - ${occ}`; if (sel) sel.appendChild(opt);
+        });
+        renderDashboard(); renderAllocations(); renderCleaning(); checkICUAlerts();
+      }
+
+      function renderAllocations() { const tbody = document.querySelector('#allocTable tbody'); if (tbody) tbody.innerHTML = ''; state.allocations.forEach(a => { const tr = document.createElement('tr'); tr.innerHTML = `<td>${a.id}</td><td>${a.patient}</td><td>${a.roomName}</td><td>${a.bed}</td><td>${new Date(a.since).toLocaleString()}</td><td>${a.chargePerHr || 0}</td>`; if (tbody) tbody.appendChild(tr); }); }
+
+      function renderDashboard() { const d = document.getElementById('dashboard'); if (!d) return; d.innerHTML = ''; const totalRooms = state.rooms.length; const totalBeds = state.rooms.reduce((s, r) => s + r.beds, 0); const occBeds = state.allocations.length; const freeBeds = totalBeds - occBeds; d.innerHTML = `<div>Total rooms: ${totalRooms}</div><div>Total beds: ${totalBeds}</div><div>Occupied beds: ${occBeds}</div><div>Free beds: ${freeBeds}</div>`; }
+
+      function renderCleaning() { const dom = document.getElementById('cleanList'); if (!dom) return; dom.innerHTML = ''; state.cleaning.forEach(c => { const p = document.createElement('div'); p.textContent = `${c.roomName} — ${c.status} — ${new Date(c.time).toLocaleString()}`; dom.appendChild(p); }); }
+
+      function checkICUAlerts() {
+        const dom = document.getElementById('icuAlerts'); if (!dom) return; dom.innerHTML = ''; const filterEl = document.getElementById('filterICU'); const filter = filterEl ? filterEl.checked : false; const icuAlloc = state.allocations.filter(a => a.type && a.type.toLowerCase().includes('icu'));
+        icuAlloc.forEach(a => { const p = document.createElement('div'); p.textContent = `ICU Occupied: ${a.patient} in ${a.roomName} bed ${a.bed}`; p.style.color = 'crimson'; dom.appendChild(p); });
+        if (filter) { // reduce dashboard to icu only
+          const d = document.getElementById('dashboard'); if (d) d.innerHTML = `<div>ICU occupied count: ${icuAlloc.length}</div>`;
+        }
+      }
+
+      const confForm = document.getElementById('confForm'); if (confForm) confForm.addEventListener('submit', function (e) { e.preventDefault(); const name = (document.getElementById('confFloor') && document.getElementById('confFloor').value) || ('Floor' + (state.rooms.length + 1)); const ward = (document.getElementById('confWard') && document.getElementById('confWard').value) || 'Ward'; const type = (document.getElementById('confType') && document.getElementById('confType').value) || 'General'; const beds = Number((document.getElementById('confBeds') && document.getElementById('confBeds').value) || 1); const id = uid('R'); state.rooms.push({ id, name: name + ' - ' + ward, floor: name, ward, type, beds }); save(); renderRooms(); this.reset(); });
+
+      const btnAddRoom = document.getElementById('btnAddRoom'); if (btnAddRoom) btnAddRoom.addEventListener('click', function (e) { e.preventDefault(); const cf = document.getElementById('confForm'); if (cf) cf.dispatchEvent(new Event('submit')); });
+
+      const allotForm = document.getElementById('allotForm'); if (allotForm) allotForm.addEventListener('submit', function (e) { e.preventDefault(); const patientEl = document.getElementById('patName'); const patient = patientEl ? patientEl.value : 'Unknown'; const roomEl = document.getElementById('allotRoom'); const roomId = roomEl ? roomEl.value : null; const bedEl = document.getElementById('allotBed'); const bed = Number(bedEl ? bedEl.value : 1); const room = state.rooms.find(r => r.id === roomId); if (!room) return alert('Select room'); const exists = state.allocations.find(a => a.roomId === roomId && a.bed === bed); if (exists) return alert('Bed occupied'); const charge = room.type && room.type.toLowerCase().includes('icu') ? 2000 : (room.type && room.type.toLowerCase().includes('private') ? 1500 : 500); const id = uid('A'); const alloc = { id, patient, roomId, roomName: room.name, bed, since: new Date().toISOString(), chargePerHr: charge, type: room.type }; state.allocations.push(alloc); save(); renderRooms(); this.reset(); });
+
+      const btnAllot = document.getElementById('btnAllot'); if (btnAllot) btnAllot.addEventListener('click', function () { const af = document.getElementById('allotForm'); if (af) af.dispatchEvent(new Event('submit')); });
+
+      const btnTransfer = document.getElementById('btnTransfer'); if (btnTransfer) btnTransfer.addEventListener('click', function () { const selEl = document.getElementById('allotRoom'); const sel = selEl ? selEl.value : null; const id = prompt('Enter allocation ID to transfer:'); const a = state.allocations.find(x => x.id === id); if (!a) return alert('Allocation not found'); const newRoom = state.rooms.find(r => r.id === sel); if (!newRoom) return alert('Select target room'); a.roomId = newRoom.id; a.roomName = newRoom.name; a.bed = Number(prompt('New bed #', '1') || 1); a.since = new Date().toISOString(); save(); renderRooms(); alert('Transfer complete'); });
+
+      const btnRefresh = document.getElementById('btnRefresh'); if (btnRefresh) btnRefresh.addEventListener('click', function () { renderRooms(); });
+      const btnCleaning = document.getElementById('btnCleaning'); if (btnCleaning) btnCleaning.addEventListener('click', function () { const rid = prompt('Room id to mark cleaned (or leave blank for all)'); if (rid) { const r = state.rooms.find(x => x.id === rid); if (!r) return alert('Room not found'); state.cleaning.push({ roomId: r.id, roomName: r.name, status: 'Cleaned', time: new Date().toISOString() }); } else { state.rooms.forEach(r => state.cleaning.push({ roomId: r.id, roomName: r.name, status: 'Cleaned', time: new Date().toISOString() })); } save(); renderCleaning(); alert('Marked cleaned'); });
+
+      const btnSeedRooms = document.getElementById('btnSeedRooms'); if (btnSeedRooms) btnSeedRooms.addEventListener('click', function () { seed(); });
+      const btnClearRoomDemo = document.getElementById('btnClearRoomDemo'); if (btnClearRoomDemo) btnClearRoomDemo.addEventListener('click', function () { if (confirm('Clear room demo data?')) { state = { rooms: [], allocations: [], cleaning: [] }; save(); renderRooms(); } });
+
+      const filterICU = document.getElementById('filterICU'); if (filterICU) filterICU.addEventListener('change', function () { checkICUAlerts(); });
+
+      function seed() { state.rooms = []; state.allocations = []; state.cleaning = []; const r1 = { id: 'R1001', name: 'Floor1 - Male Ward', floor: '1', ward: 'Male Ward', type: 'General', beds: 6 }; const r2 = { id: 'R1002', name: 'Floor1 - Private A', floor: '1', ward: 'Private', type: 'Private', beds: 2 }; const r3 = { id: 'R1003', name: 'Floor2 - ICU 1', floor: '2', ward: 'ICU', type: 'ICU', beds: 4 }; state.rooms.push(r1, r2, r3); state.allocations.push({ id: 'A2001', patient: 'John Doe', roomId: r1.id, roomName: r1.name, bed: 1, since: new Date().toISOString(), chargePerHr: 500, type: r1.type }); state.allocations.push({ id: 'A2002', patient: 'Jane Roe', roomId: r3.id, roomName: r3.name, bed: 1, since: new Date().toISOString(), chargePerHr: 2000, type: r3.type }); state.cleaning.push({ roomId: r1.id, roomName: r1.name, status: 'Pending', time: new Date().toISOString() }); save(); renderRooms(); }
+
+      function renderCleaning() { const dom = document.getElementById('cleanList'); if (!dom) return; dom.innerHTML = ''; state.cleaning.forEach(c => { const p = document.createElement('div'); p.textContent = `${c.roomName} — ${c.status} — ${new Date(c.time).toLocaleString()}`; dom.appendChild(p); }); }
+
+      load(); if (!state.rooms || state.rooms.length === 0) seed(); renderRooms();
+    });
+  </script>
   <script src="../sidenav.js"></script>
 </body>
 

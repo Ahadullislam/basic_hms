@@ -37,24 +37,91 @@
 
   <main class="hms-main">
     <section class="hms-section">
-      <div class="hms-card">
-        <div class="hms-card-content">
-          <h2>Core Features</h2>
-          <ul>
-            <li>Daily OPD/IPD operational reports</li>
-            <li>Revenue & billing summaries</li>
-            <li>Patient and inventory trends</li>
-            <li>Lab test and occupancy reports</li>
-            <li>Staff duty and payroll reports</li>
-            <li>Custom report builder and export options</li>
-          </ul>
-        </div>
-      </div>
+      <div class="hms-grid" style="display:grid;grid-template-columns:1fr 340px;gap:1rem;align-items:start">
+        <div>
+          <div class="hms-card">
+            <div class="hms-card-header">
+              <h2>Report Builder</h2><small>Select a report and parameters</small>
+            </div>
+            <div class="hms-card-content">
+              <form id="reportForm" style="display:grid;grid-template-columns:1fr 160px;gap:.5rem;align-items:end">
+                <div>
+                  <label>Report Type</label>
+                  <select id="reportType">
+                    <option value="opd_daily">Daily OPD/IPD Operational</option>
+                    <option value="revenue_summary">Revenue & Billing Summary</option>
+                    <option value="patient_trends">Patient Trends</option>
+                    <option value="lab_summary">Lab Tests & Results Summary</option>
+                    <option value="occupancy_report">Occupancy Report</option>
+                    <option value="staff_payroll">Staff Duty & Payroll</option>
+                    <option value="custom">Custom - CSV Builder</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Time Range</label>
+                  <input type="date" id="fromDate">
+                </div>
+                <div>
+                  <label>&nbsp;</label>
+                  <input type="date" id="toDate">
+                </div>
+                <div>
+                  <label>Group By (optional)</label>
+                  <input id="groupBy" placeholder="e.g., month, dept">
+                </div>
+                <div style="grid-column:1 / -1;display:flex;gap:.5rem">
+                  <button class="btn" id="btnRun" type="button">Run Report</button>
+                  <button class="btn outline" id="btnPreview" type="button">Preview Data</button>
+                </div>
+              </form>
 
-      <div class="hms-actions" style="margin-top:1rem;">
-        <button class="btn">Run Report</button>
-        <button class="btn outline">Schedule Report</button>
-        <button class="btn">Export (CSV/PDF)</button>
+              <div id="reportSummary" style="margin-top:.5rem"></div>
+              <table class="hms-table" id="reportTable" style="margin-top:.6rem">
+                <thead>
+                  <tr id="reportHead"></tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem">
+            <div class="hms-card-header">
+              <h3>Quick Exports</h3>
+            </div>
+            <div class="hms-card-content">
+              <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+                <button class="btn" id="btnCSV" type="button">Export CSV</button>
+                <button class="btn outline" id="btnPrint" type="button">Printable (Open)</button>
+                <button class="btn" id="btnSchedule" type="button">Save Schedule</button>
+              </div>
+              <div id="schedList" style="margin-top:.6rem"></div>
+            </div>
+          </div>
+        </div>
+
+        <aside>
+          <div class="hms-card">
+            <div class="hms-card-header">
+              <h3>Report Library & Trends</h3>
+            </div>
+            <div class="hms-card-content">
+              <div id="miniCharts"></div>
+              <hr>
+              <button class="btn outline" id="btnSeedData" type="button">Seed Demo Data</button>
+              <button class="btn" id="btnClearReports" type="button">Clear Demo Data</button>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem">
+            <div class="hms-card-header">
+              <h3>Notes</h3>
+            </div>
+            <div class="hms-card-content">
+              <p>Reports use in-page demo data. Connect to your backend later to populate real records.</p>
+            </div>
+          </div>
+        </aside>
       </div>
     </section>
   </main>
@@ -63,6 +130,67 @@
     <p>© 2025 Hospital Management System | Reports & Analytics Module</p>
   </footer>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Reports demo - demo datasets and simple report generators
+      const LS = 'hms_reports_v1';
+      let db = { patients: [], invoices: [], labs: [], occupancy: [], staff: [], schedules: [] };
+
+      function save() { localStorage.setItem(LS, JSON.stringify(db)); }
+      function load() { const r = localStorage.getItem(LS); if (r) db = JSON.parse(r); }
+
+      function seed() {
+        db.patients = []; db.invoices = []; db.labs = []; db.occupancy = []; db.staff = []; db.schedules = [];
+        // patients
+        for (let i = 1; i <= 30; i++) { db.patients.push({ id: 'P' + i, name: 'Patient ' + i, admit: new Date(Date.now() - (i * 24 * 3600 * 1000)).toISOString().slice(0, 10) }); }
+        // invoices
+        for (let i = 1; i <= 30; i++) { db.invoices.push({ id: 'INV' + i, patient: 'P' + ((i % 10) + 1), amount: Math.floor(Math.random() * 5000 + 200), date: new Date(Date.now() - (i * 24 * 3600 * 1000)).toISOString().slice(0, 10) }); }
+        // labs
+        for (let i = 1; i <= 20; i++) { db.labs.push({ id: 'L' + i, patient: 'P' + ((i % 10) + 1), test: 'Test' + ((i % 5) + 1), result: Math.floor(Math.random() * 120), date: new Date(Date.now() - (i * 12 * 3600 * 1000)).toISOString().slice(0, 10) }); }
+        // occupancy simple
+        db.occupancy.push({ date: new Date().toISOString().slice(0, 10), occupied: 12, total: 20 });
+        db.staff.push({ id: 'S1', name: 'Dr. A', dutyHours: 160, pay: 5000 }); db.staff.push({ id: 'S2', name: 'Nurse B', dutyHours: 160, pay: 2500 });
+        save(); renderSched(); renderMiniCharts();
+      }
+
+      function runReport() {
+        const typeEl = document.getElementById('reportType'); const type = typeEl ? typeEl.value : null;
+        const fromEl = document.getElementById('fromDate'); const from = fromEl ? fromEl.value : null;
+        const toEl = document.getElementById('toDate'); const to = toEl ? toEl.value : null;
+        const tbody = document.querySelector('#reportTable tbody'); const head = document.getElementById('reportHead'); if (tbody) tbody.innerHTML = ''; if (head) head.innerHTML = ''; const summary = document.getElementById('reportSummary'); if (summary) summary.innerHTML = '';
+        if (!type) return;
+        if (type === 'opd_daily') {
+          if (head) head.innerHTML = '<th>Date</th><th>OPD Visits</th><th>IPD Admissions</th>'; // simulate
+          for (let d = 0; d < 7; d++) { const rowDate = new Date(Date.now() - d * 24 * 3600 * 1000).toISOString().slice(0, 10); const tr = document.createElement('tr'); tr.innerHTML = `<td>${rowDate}</td><td>${Math.floor(Math.random() * 50 + 20)}</td><td>${Math.floor(Math.random() * 10 + 1)}</td>`; if (tbody) tbody.appendChild(tr); } if (summary) summary.textContent = 'Showing last 7 days (demo)';
+        }
+        else if (type === 'revenue_summary') { if (head) head.innerHTML = '<th>Date</th><th>Invoices</th><th>Total</th>'; const groups = {}; db.invoices.forEach(inv => { groups[inv.date] = (groups[inv.date] || 0) + inv.amount; }); Object.keys(groups).slice(0, 10).forEach(d => { const tr = document.createElement('tr'); tr.innerHTML = `<td>${d}</td><td>${db.invoices.filter(i => i.date === d).length}</td><td>${groups[d]}</td>`; if (tbody) tbody.appendChild(tr); }); }
+        else if (type === 'patient_trends') { if (head) head.innerHTML = '<th>Month</th><th>New Patients</th>'; for (let m = 1; m <= 6; m++) { const tr = document.createElement('tr'); tr.innerHTML = `<td>Month-${m}</td><td>${Math.floor(Math.random() * 200)}</td>`; if (tbody) tbody.appendChild(tr); } }
+        else if (type === 'lab_summary') { if (head) head.innerHTML = '<th>Test</th><th>Count</th><th>Avg Result</th>'; const groups = {}; db.labs.forEach(l => { const k = l.test; groups[k] = groups[k] || { count: 0, sum: 0 }; groups[k].count++; groups[k].sum += l.result; }); Object.keys(groups).forEach(k => { const g = groups[k]; const tr = document.createElement('tr'); tr.innerHTML = `<td>${k}</td><td>${g.count}</td><td>${Math.round(g.sum / g.count)}</td>`; if (tbody) tbody.appendChild(tr); }); }
+        else if (type === 'occupancy_report') { if (head) head.innerHTML = '<th>Date</th><th>Occupied</th><th>Total</th>'; db.occupancy.forEach(o => { const tr = document.createElement('tr'); tr.innerHTML = `<td>${o.date}</td><td>${o.occupied}</td><td>${o.total}</td>`; if (tbody) tbody.appendChild(tr); }); }
+        else if (type === 'staff_payroll') { if (head) head.innerHTML = '<th>Staff</th><th>Hours</th><th>Pay</th>'; db.staff.forEach(s => { const tr = document.createElement('tr'); tr.innerHTML = `<td>${s.name}</td><td>${s.dutyHours}</td><td>${s.pay}</td>`; if (tbody) tbody.appendChild(tr); }); }
+        else if (type === 'custom') { if (head) head.innerHTML = '<th>Custom CSV Preview</th>'; const tr = document.createElement('tr'); tr.innerHTML = '<td>Use CSV export to download sample data</td>'; if (tbody) tbody.appendChild(tr); }
+      }
+
+      const btnRun = document.getElementById('btnRun'); if (btnRun) btnRun.addEventListener('click', function (e) { e.preventDefault(); runReport(); });
+      const btnPreview = document.getElementById('btnPreview'); if (btnPreview) btnPreview.addEventListener('click', function () { const rs = document.getElementById('reportSummary'); if (rs) rs.textContent = 'Preview shows sample rows. Use Run Report for real output.'; });
+
+      function toCSV() { const rows = []; const ths = Array.from(document.querySelectorAll('#reportHead th')).map(t => t.textContent); if (ths.length) rows.push(ths.join(',')); const trs = document.querySelectorAll('#reportTable tbody tr'); trs.forEach(tr => { const cells = Array.from(tr.querySelectorAll('td')).map(td => '"' + td.textContent.replace(/"/g, '""') + '"'); rows.push(cells.join(',')); }); return rows.join('\n'); }
+
+      const btnCSV = document.getElementById('btnCSV'); if (btnCSV) btnCSV.addEventListener('click', function () { const csv = toCSV(); if (!csv) return alert('Run a report first'); const blob = new Blob([csv], { type: 'text/csv' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'report.csv'; a.click(); URL.revokeObjectURL(url); });
+      const btnPrint = document.getElementById('btnPrint'); if (btnPrint) btnPrint.addEventListener('click', function () { const summary = document.getElementById('reportSummary'); const table = document.getElementById('reportTable'); const html = `<html><head><title>Report</title><link href="../style.css" rel="stylesheet"></head><body>${summary ? summary.outerHTML : ''}${table ? table.outerHTML : ''}</body></html>`; const w = window.open('about:blank'); w.document.write(html); w.document.close(); });
+
+      // schedule
+      function renderSched() { const dom = document.getElementById('schedList'); if (dom) dom.innerHTML = ''; const list = JSON.parse(localStorage.getItem(LS + '_schedules') || '[]'); list.forEach(s => { if (dom) { const d = document.createElement('div'); d.textContent = `${s.name} — ${s.type} — ${s.cron || s.when}`; dom.appendChild(d); } }); }
+      const btnSchedule = document.getElementById('btnSchedule'); if (btnSchedule) btnSchedule.addEventListener('click', function () { const typeEl = document.getElementById('reportType'); const type = typeEl ? typeEl.value : 'custom'; const name = prompt('Schedule name?') || ('Sched-' + Date.now()); const when = prompt('Run when (e.g., daily, weekly, or ISO date)') || 'daily'; const list = JSON.parse(localStorage.getItem(LS + '_schedules') || '[]'); list.push({ name, type, when }); localStorage.setItem(LS + '_schedules', JSON.stringify(list)); renderSched(); alert('Schedule saved (demo)'); });
+
+      const btnSeedData = document.getElementById('btnSeedData'); if (btnSeedData) btnSeedData.addEventListener('click', function () { seed(); alert('Demo data seeded'); });
+      const btnClearReports = document.getElementById('btnClearReports'); if (btnClearReports) btnClearReports.addEventListener('click', function () { if (confirm('Clear demo reports data?')) { localStorage.removeItem(LS); localStorage.removeItem(LS + '_schedules'); db = { patients: [], invoices: [], labs: [], occupancy: [], staff: [], schedules: [] }; renderSched(); const mc = document.getElementById('miniCharts'); if (mc) mc.innerHTML = ''; const rt = document.querySelector('#reportTable tbody'); if (rt) rt.innerHTML = ''; const rs = document.getElementById('reportSummary'); if (rs) rs.innerHTML = ''; } });
+
+      function renderMiniCharts() { const dom = document.getElementById('miniCharts'); if (dom) dom.innerHTML = ''; const r = document.createElement('div'); r.innerHTML = `<div>Revenue (last 7): ${db.invoices.slice(0, 7).reduce((s, i) => s + i.amount, 0)}</div><div>Patients (30d): ${db.patients.length}</div><div>Lab tests: ${db.labs.length}</div>`; if (dom) dom.appendChild(r); }
+
+      load(); renderSched(); if (!db.patients || db.patients.length === 0) seed(); renderMiniCharts();
+    });
+  </script>
   <script src="../sidenav.js"></script>
 </body>
 

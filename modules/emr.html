@@ -209,103 +209,103 @@
   </main>
 
   <script>
-    // Medical history demo
-    document.getElementById('histForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const f = e.target;
-      const title = f.title.value || 'Event';
-      const date = f.date.value || new Date().toISOString().slice(0, 10);
-      const ul = document.getElementById('historyList');
-      const li = document.createElement('li');
-      li.textContent = `${date}: ${title}`;
-      ul.appendChild(li);
-      f.reset();
-    });
+    document.addEventListener('DOMContentLoaded', function () {
+      // Medical history demo
+      const histForm = document.getElementById('histForm'); if (histForm) histForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const f = e.target;
+        const title = f.title.value || 'Event';
+        const date = f.date.value || new Date().toISOString().slice(0, 10);
+        const ul = document.getElementById('historyList');
+        const li = document.createElement('li');
+        li.textContent = `${date}: ${title}`;
+        ul.appendChild(li);
+        f.reset();
+      });
 
-    // Vitals demo
-    document.getElementById('vitalsForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const f = e.target;
-      const bp = f.bp.value || '-';
-      const hr = f.hr.value || '-';
-      const temp = f.temp.value || '-';
-      const tb = document.getElementById('vitalsTable').querySelector('tbody');
-      const now = new Date();
-      const time = now.toISOString().slice(0, 16).replace('T', ' ');
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td style="padding:0.4rem">${time}</td><td style="padding:0.4rem">${bp}</td><td style="padding:0.4rem">${hr}</td><td style="padding:0.4rem">${temp}</td>`;
-      tb.appendChild(tr);
-      f.reset();
-    });
+      // Vitals demo
+      const vitalsForm = document.getElementById('vitalsForm');
+      if (vitalsForm) vitalsForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const f = e.target;
+        const bp = f.bp.value || '-';
+        const hr = f.hr.value || '-';
+        const temp = f.temp.value || '-';
+        const tb = document.getElementById('vitalsTable').querySelector('tbody');
+        const now = new Date();
+        const time = now.toISOString().slice(0, 16).replace('T', ' ');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td style="padding:0.4rem">${time}</td><td style="padding:0.4rem">${bp}</td><td style="padding:0.4rem">${hr}</td><td style="padding:0.4rem">${temp}</td>`;
+        tb.appendChild(tr);
+        f.reset();
+      });
 
-    // SOAP notes demo
-    document.getElementById('soapForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const f = e.target;
-      const subj = f.subjective.value || '';
-      const obj = f.objective.value || '';
-      const assessment = f.assessment.value || '';
-      const plan = f.plan.value || '';
-      const area = document.getElementById('soapList');
-      const p = document.createElement('p');
-      p.textContent = `${new Date().toISOString().slice(0, 10)} — S:${subj} | O:${obj} | A:${assessment} | P:${plan}`;
-      area.appendChild(p);
-      f.reset();
-    });
-    document.getElementById('clearNotes').addEventListener('click', function () {
-      document.getElementById('soapList').innerHTML = '';
-    });
+      // SOAP notes demo
+      const soapForm = document.getElementById('soapForm');
+      if (soapForm) soapForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const f = e.target;
+        const subj = f.subjective.value || '';
+        const obj = f.objective.value || '';
+        const assessment = f.assessment.value || '';
+        const plan = f.plan.value || '';
+        const area = document.getElementById('soapList');
+        const p = document.createElement('p');
+        p.textContent = `${new Date().toISOString().slice(0, 10)} — S:${subj} | O:${obj} | A:${assessment} | P:${plan}`;
+        area.appendChild(p);
+        f.reset();
+      });
+      const clearNotesBtn = document.getElementById('clearNotes'); if (clearNotesBtn) clearNotesBtn.addEventListener('click', function () { document.getElementById('soapList').innerHTML = ''; });
 
-    // Prescription demo
-    document.getElementById('rxForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const f = e.target;
-      const drug = f.drug.value || 'Untitled';
-      const dose = f.dose.value || '-';
-      const freq = f.freq.value || '-';
-      const tb = document.getElementById('rxTable').querySelector('tbody');
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td style="padding:0.4rem">${drug}</td><td style="padding:0.4rem">${dose}</td><td style="padding:0.4rem">${freq}</td>`;
-      tb.appendChild(tr);
-      f.reset();
-    });
-    document.getElementById('clearRx').addEventListener('click', function () {
-      document.getElementById('rxTable').querySelector('tbody').innerHTML = '';
-    });
-    document.getElementById('printRx').addEventListener('click', function () {
-      const rows = Array.from(document.getElementById('rxTable').querySelectorAll('tbody tr'));
-      if (rows.length === 0) return alert('No medications to print');
-      let html = `<html><head><title>Prescription</title><link href="../style.css" rel="stylesheet"></head><body><h2>Prescription</h2><table style="width:100%;border-collapse:collapse;">`;
-      html += '<thead><tr><th style="text-align:left;padding:0.4rem">Drug</th><th style="text-align:left;padding:0.4rem">Dose</th><th style="text-align:left;padding:0.4rem">Frequency</th></tr></thead><tbody>';
-      rows.forEach(r => { html += `<tr>${r.innerHTML}</tr>`; });
-      html += '</tbody></table><p>Printed: ' + new Date().toLocaleString() + '</p></body></html>';
-      const w = window.open('', '_blank');
-      w.document.write(html);
-      w.document.close();
-      w.print();
-    });
+      // Prescription demo
+      const rxForm = document.getElementById('rxForm'); if (rxForm) rxForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const f = e.target;
+        const drug = f.drug.value || 'Untitled';
+        const dose = f.dose.value || '-';
+        const freq = f.freq.value || '-';
+        const tb = document.getElementById('rxTable').querySelector('tbody');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td style="padding:0.4rem">${drug}</td><td style="padding:0.4rem">${dose}</td><td style="padding:0.4rem">${freq}</td>`;
+        tb.appendChild(tr);
+        f.reset();
+      });
+      const clearRxBtn = document.getElementById('clearRx'); if (clearRxBtn) clearRxBtn.addEventListener('click', function () { const t = document.getElementById('rxTable'); if (t) t.querySelector('tbody').innerHTML = ''; });
+      const printRxBtn = document.getElementById('printRx'); if (printRxBtn) printRxBtn.addEventListener('click', function () {
+        const rows = Array.from(document.getElementById('rxTable').querySelectorAll('tbody tr'));
+        if (rows.length === 0) return alert('No medications to print');
+        let html = `<html><head><title>Prescription</title><link href="../style.css" rel="stylesheet"></head><body><h2>Prescription</h2><table style="width:100%;border-collapse:collapse;">`;
+        html += '<thead><tr><th style="text-align:left;padding:0.4rem">Drug</th><th style="text-align:left;padding:0.4rem">Dose</th><th style="text-align:left;padding:0.4rem">Frequency</th></tr></thead><tbody>';
+        rows.forEach(r => { html += `<tr>${r.innerHTML}</tr>`; });
+        html += '</tbody></table><p>Printed: ' + new Date().toLocaleString() + '</p></body></html>';
+        const w = window.open('', '_blank');
+        w.document.write(html);
+        w.document.close();
+        w.print();
+      });
 
-    // Diagnosis demo
-    document.getElementById('diagForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const f = e.target;
-      const sel = f.icd;
-      const text = sel.options[sel.selectedIndex].text;
-      const ul = document.getElementById('diagList');
-      const li = document.createElement('li');
-      li.textContent = text;
-      ul.appendChild(li);
-    });
+      // Diagnosis demo
+      const diagForm = document.getElementById('diagForm'); if (diagForm) diagForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const f = e.target;
+        const sel = f.icd;
+        const text = sel.options[sel.selectedIndex].text;
+        const ul = document.getElementById('diagList');
+        const li = document.createElement('li');
+        li.textContent = text;
+        ul.appendChild(li);
+      });
 
-    // Document uploads
-    document.getElementById('docUpload').addEventListener('change', function (e) {
-      const out = document.getElementById('docList');
-      out.innerHTML = '';
-      const files = Array.from(e.target.files || []);
-      files.forEach(f => {
-        const p = document.createElement('div');
-        p.textContent = `${f.name} (${Math.round(f.size / 1024)} KB)`;
-        out.appendChild(p);
+      // Document uploads
+      const docUpload = document.getElementById('docUpload'); if (docUpload) docUpload.addEventListener('change', function (e) {
+        const out = document.getElementById('docList');
+        out.innerHTML = '';
+        const files = Array.from(e.target.files || []);
+        files.forEach(f => {
+          const p = document.createElement('div');
+          p.textContent = `${f.name} (${Math.round(f.size / 1024)} KB)`;
+          out.appendChild(p);
+        });
       });
     });
   </script>

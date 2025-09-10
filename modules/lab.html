@@ -40,21 +40,127 @@
       <div class="hms-card">
         <div class="hms-card-content">
           <h2>Core Features</h2>
-          <ul>
-            <li>Test catalogue and categorization</li>
-            <li>Order creation and sample tracking</li>
-            <li>Lab workflow states and technician assignment</li>
-            <li>Result entry with reference ranges</li>
-            <li>Auto-flagging abnormal results</li>
-            <li>Digital report generation and delivery</li>
-          </ul>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;">
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Test Catalogue</h3>
+              <p>Maintain tests with categories and reference ranges.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Order Creation</h3>
+              <p>Create test orders and track samples.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Sample Tracking</h3>
+              <p>Track collection status and assign technicians.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Lab Workflow</h3>
+              <p>Workflows: ordered → collected → processing → result ready.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Result Entry</h3>
+              <p>Enter results with reference ranges; auto-flag abnormalities.</p>
+            </div>
+            <div class="hms-card" style="padding:1rem;">
+              <h3>Digital Reports</h3>
+              <p>Generate and deliver digital reports to doctors/patients.</p>
+            </div>
+          </div>
         </div>
       </div>
 
+      <div style="display:grid;grid-template-columns:1fr 420px;gap:1.2rem;margin-top:1.2rem;align-items:start;">
+        <div>
+          <div class="hms-card">
+            <div class="hms-card-content">
+              <h3>Test Catalogue</h3>
+              <form id="testForm" style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+                <input name="testName" placeholder="Test name" style="flex:1;padding:0.5rem;min-width:140px;" />
+                <input name="category" placeholder="Category (e.g. Blood)" style="padding:0.5rem;min-width:120px;" />
+                <input name="refMin" placeholder="Ref min" type="number" step="0.01"
+                  style="padding:0.5rem;min-width:80px;" />
+                <input name="refMax" placeholder="Ref max" type="number" step="0.01"
+                  style="padding:0.5rem;min-width:80px;" />
+                <button class="btn" type="submit">Add Test</button>
+              </form>
+              <table id="testTable" style="width:100%;margin-top:0.6rem;border-collapse:collapse;">
+                <thead>
+                  <tr>
+                    <th style="text-align:left;padding:0.4rem">Test</th>
+                    <th style="text-align:left;padding:0.4rem">Category</th>
+                    <th style="text-align:left;padding:0.4rem">Ref Range</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem;">
+            <div class="hms-card-content">
+              <h3>Create Order / Sample</h3>
+              <form id="orderForm" style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+                <input name="patient" placeholder="Patient name / MRN" style="padding:0.5rem;min-width:160px;flex:1;" />
+                <select id="orderTest" name="test" style="padding:0.5rem;min-width:160px;"></select>
+                <button class="btn" type="submit">Create Order</button>
+              </form>
+              <table id="orderTable" style="width:100%;margin-top:0.6rem;border-collapse:collapse;">
+                <thead>
+                  <tr>
+                    <th style="text-align:left;padding:0.4rem">Order ID</th>
+                    <th style="text-align:left;padding:0.4rem">Patient</th>
+                    <th style="text-align:left;padding:0.4rem">Test</th>
+                    <th style="text-align:left;padding:0.4rem">Status</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="hms-card" style="margin-top:1rem;">
+            <div class="hms-card-content">
+              <h3>Result Entry</h3>
+              <form id="resultForm" style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+                <select id="resultOrder" name="order" style="padding:0.5rem;min-width:200px;flex:1;"></select>
+                <input name="value" placeholder="Result value" type="number" step="0.01"
+                  style="padding:0.5rem;min-width:120px;" />
+                <button class="btn" type="submit">Submit Result</button>
+              </form>
+              <div id="resultMsgs" style="margin-top:0.6rem;color:var(--subtitle);"></div>
+            </div>
+          </div>
+        </div>
+
+        <aside>
+          <div class="hms-card">
+            <div class="hms-card-content">
+              <h3>Sample Tracking & Workflow</h3>
+              <p style="margin-top:0.2rem;">Select an order and advance its workflow state. Assign technician.</p>
+              <div style="display:flex;gap:0.4rem;margin-top:0.6rem;">
+                <select id="wfOrder" style="flex:1;padding:0.5rem;"></select>
+                <select id="techSelect" style="padding:0.5rem;min-width:140px;">
+                  <option>Tech A</option>
+                  <option>Tech B</option>
+                </select>
+              </div>
+              <div style="margin-top:0.6rem;display:flex;gap:0.4rem;">
+                <button id="advanceState" class="btn" type="button">Advance State</button>
+                <button id="markCollected" class="btn outline" type="button">Mark Collected</button>
+              </div>
+              <h4 style="margin-top:1rem;">Auto-flagged Results</h4>
+              <div id="flags" style="color:var(--danger);font-weight:600;margin-top:0.4rem;"></div>
+              <div style="margin-top:1rem;"><button id="genReport" class="btn" type="button">Generate Report</button>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
       <div class="hms-actions" style="margin-top:1rem;">
-        <button class="btn">Create Test Order</button>
-        <button class="btn outline">Enter Results</button>
-        <button class="btn">Print Report</button>
+        <button id="btnDemo" class="btn" type="button">Add Demo Tests & Orders</button>
+        <button class="btn outline" type="button">Enter Results</button>
+        <button class="btn" type="button">Print Report</button>
       </div>
     </section>
   </main>
@@ -63,6 +169,103 @@
     <p>© 2025 Hospital Management System | Laboratory Module</p>
   </footer>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Lab demo data
+      const tests = []; // {id,name,category,refMin,refMax}
+      const orders = []; // {id,patient,testId,status,tech,result}
+      const STATES = ['Ordered', 'Collected', 'Processing', 'Result Ready'];
+
+      function refreshTestTable() {
+        const tbody = document.querySelector('#testTable tbody'); if (tbody) tbody.innerHTML = '';
+        const sel = document.getElementById('orderTest'); if (sel) sel.innerHTML = '';
+        tests.forEach(t => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td style="padding:0.4rem">${t.name}</td><td style="padding:0.4rem">${t.category}</td><td style="padding:0.4rem">${t.refMin} - ${t.refMax}</td>`;
+          if (tbody) tbody.appendChild(tr);
+          if (sel) {
+            const opt = document.createElement('option'); opt.value = t.id; opt.textContent = `${t.name} (${t.category})`; sel.appendChild(opt);
+          }
+        });
+        refreshOrderLists();
+      }
+
+      function refreshOrderLists() {
+        const tbody = document.querySelector('#orderTable tbody'); if (tbody) tbody.innerHTML = '';
+        const wf = document.getElementById('wfOrder'); if (wf) wf.innerHTML = '';
+        const resSel = document.getElementById('resultOrder'); if (resSel) resSel.innerHTML = '';
+        orders.forEach(o => {
+          const t = tests.find(x => x.id === o.testId) || { name: '?' };
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td style="padding:0.4rem">${o.id}</td><td style="padding:0.4rem">${o.patient}</td><td style="padding:0.4rem">${t.name}</td><td style="padding:0.4rem">${o.status}${o.tech ? ' / ' + o.tech : ''}</td>`;
+          if (tbody) tbody.appendChild(tr);
+          if (wf) {
+            const opt = document.createElement('option'); opt.value = o.id; opt.textContent = `${o.id} — ${o.patient} — ${t.name}`; wf.appendChild(opt);
+            const opt2 = opt.cloneNode(true); if (resSel) resSel.appendChild(opt2);
+          }
+        });
+      }
+
+      const testForm = document.getElementById('testForm'); if (testForm) testForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const f = e.target; const id = 'T' + (tests.length + 1);
+        tests.push({ id, name: f.testName.value || 'Test', category: f.category.value || 'General', refMin: Number(f.refMin.value) || 0, refMax: Number(f.refMax.value) || 0 });
+        refreshTestTable(); f.reset();
+      });
+
+      const orderForm = document.getElementById('orderForm'); if (orderForm) orderForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const f = e.target; const id = 'O' + (orders.length + 1001);
+        orders.push({ id, patient: f.patient.value || 'Unknown', testId: f.test.value, status: STATES[0], tech: null, result: null });
+        refreshOrderLists(); f.reset();
+      });
+
+      const advanceStateBtn = document.getElementById('advanceState'); if (advanceStateBtn) advanceStateBtn.addEventListener('click', function () {
+        const sel = document.getElementById('wfOrder'); const id = sel ? sel.value : null; const o = orders.find(x => x.id === id); if (!o) return alert('Select order');
+        const idx = STATES.indexOf(o.status); if (idx < STATES.length - 1) o.status = STATES[idx + 1]; else alert('Already final');
+        const tech = document.getElementById('techSelect'); o.tech = tech ? tech.value : null; refreshOrderLists();
+      });
+      const markCollectedBtn = document.getElementById('markCollected'); if (markCollectedBtn) markCollectedBtn.addEventListener('click', function () {
+        const sel = document.getElementById('wfOrder'); const id = sel ? sel.value : null; const o = orders.find(x => x.id === id); if (!o) return alert('Select order'); o.status = 'Collected'; refreshOrderLists();
+      });
+
+      const resultForm = document.getElementById('resultForm'); if (resultForm) resultForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const f = e.target; const id = f.order.value; const o = orders.find(x => x.id === id); if (!o) return alert('Select order');
+        const val = Number(f.value.value);
+        o.result = val; o.status = 'Result Ready';
+        // auto-flag
+        const test = tests.find(t => t.id === o.testId);
+        const flags = document.getElementById('flags'); if (test && flags) {
+          if (val < test.refMin || val > test.refMax) {
+            const p = document.createElement('div'); p.textContent = `${o.id} (${test.name}) flagged: ${val} (ref ${test.refMin}-${test.refMax})`; flags.appendChild(p);
+          }
+        }
+        refreshOrderLists(); const rm = document.getElementById('resultMsgs'); if (rm) rm.textContent = `Result recorded for ${o.id}`; f.reset();
+      });
+
+      const genReportBtn = document.getElementById('genReport'); if (genReportBtn) genReportBtn.addEventListener('click', function () {
+        const sel = document.getElementById('wfOrder'); const id = sel ? sel.value : null; const o = orders.find(x => x.id === id); if (!o) return alert('Select order to report');
+        const test = tests.find(t => t.id === o.testId) || { name: '?' };
+        const html = `<html><head><title>Lab Report ${o.id}</title><link href="../style.css" rel="stylesheet"></head><body><h2>Lab Report - ${o.id}</h2><p>Patient: ${o.patient}</p><p>Test: ${test.name}</p><p>Result: ${o.result ?? '\u2014'}</p><p>Reference: ${test.refMin} - ${test.refMax}</p><p>Generated: ${new Date().toLocaleString()}</p></body></html>`;
+        const w = window.open('', '_blank'); w.document.write(html); w.document.close();
+      });
+
+      const btnDemo = document.getElementById('btnDemo'); if (btnDemo) btnDemo.addEventListener('click', function () {
+        tests.length = 0; orders.length = 0; const flagsEl = document.getElementById('flags'); if (flagsEl) flagsEl.innerHTML = '';
+        tests.push({ id: 'T1', name: 'Hemoglobin', category: 'Blood', refMin: 12, refMax: 16 });
+        tests.push({ id: 'T2', name: 'WBC', category: 'Blood', refMin: 4, refMax: 11 });
+        tests.push({ id: 'T3', name: 'Random Glucose', category: 'Biochem', refMin: 70, refMax: 140 });
+        refreshTestTable();
+        orders.push({ id: 'O1001', patient: 'John Doe', testId: 'T1', status: STATES[0], tech: null, result: null });
+        orders.push({ id: 'O1002', patient: 'Jane Roe', testId: 'T3', status: STATES[0], tech: null, result: null });
+        refreshOrderLists();
+      });
+
+      // initialize demo
+      const initBtn = document.getElementById('btnDemo'); if (initBtn) initBtn.click();
+    });
+  </script>
   <script src="../sidenav.js"></script>
 </body>
 
